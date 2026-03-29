@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cornerstone Games • Darkwater</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=UnifrakturCook:wght@700&display=swap');
+    body { font-family: 'IM Fell English SC', serif; background: #0a1a2f; color: #d4c9a8; margin:0; padding:0; }
+    .hero { background: linear-gradient(rgba(10,26,47,0.85), rgba(10,26,47,0.85)), url('https://via.placeholder.com/1920x1080/0a1a2f/1e3a5f?text=Darkwater+Diver') center/cover no-repeat; text-align:center; padding:120px 20px; }
+    h1 { font-family: 'UnifrakturCook', cursive; font-size: 4.5rem; color: #c9a66b; text-shadow: 0 0 20px #000; }
+    .nav { background: #1e3a5f; padding: 15px; text-align: center; position: sticky; top:0; z-index:100; }
+    .nav a { color: #d4c9a8; margin: 0 15px; text-decoration: none; font-weight: bold; }
+    .section { padding: 60px 20px; max-width: 1100px; margin: 0 auto; }
+    .list-builder, .dice-roller { background: #1e3a5f; border-radius: 12px; padding: 30px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #d4c9a8; }
+    button { background: #c9a66b; color: #0a1a2f; border: none; padding: 14px 28px; margin: 8px; cursor: pointer; font-weight: bold; font-size: 1.1rem; border-radius: 8px; }
+    .dice-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin: 30px 0; }
+    .die { width: 90px; height: 90px; background: #112233; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.6); position: relative; }
+    .die.steady { background: #0a2a4a; color: #a8d4ff; }
+    .die.surge { background: #1e4a6b; color: #c9f0ff; }
+    .die.savage { background: #8b1e1e; color: #ffd700; animation: glow 1.5s infinite alternate; }
+    @keyframes glow { from { box-shadow: 0 0 10px #ffd700; } to { box-shadow: 0 0 30px #ffd700; } }
+    .die-label { position: absolute; bottom: 6px; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; }
+    .total { font-size: 1.5rem; font-weight: bold; text-align: center; margin: 20px 0; }
+    .results-summary { background: #13273f; padding: 20px; border-radius: 8px; text-align: center; font-size: 1.3rem; }
+  </style>
+</head>
+<body>
+
+  <div class="nav">
+    <a href="#home">Home</a>
+    <a href="#builder">List Builder</a>
+    <a href="#roller">Dice Roller</a>
+    <a href="#downloads">Downloads</a>
+  </div>
+
+  <div id="home" class="hero">
+    <h1>Cornerstone Games</h1>
+    <h2 style="color:#c9a66b;">Darkwater • Vertical Skirmish in a Drowned World</h2>
+    <p style="font-size:1.6rem;">You’re either moving… or you’re dying.</p>
+  </div>
+
+  <!-- LIST BUILDER -->
+  <div id="builder" class="section list-builder">
+    <h2 style="text-align:center;">500-Doubloon List Builder</h2>
+    <select id="faction" style="padding:10px;font-size:1.1rem;margin-bottom:20px;">
+      <option value="pirates">Pirates (Swarm)</option>
+      <option value="skylegions">Sky Legions (Elite Vertical)</option>
+    </select>
+    <div id="builder-content"></div>
+    <div class="total">Total: <span id="total-number">0</span> / 500 doubloons</div>
+  </div>
+
+  <!-- DICE ROLLER -->
+  <div id="roller" class="section dice-roller">
+    <h2 style="text-align:center;">Darkwater Dice Roller</h2>
+    <p style="text-align:center;">Roll your custom Steady / Surge / Savage dice</p>
+    <div style="text-align:center;margin:20px 0;">
+      <label style="font-size:1.2rem;">Number of dice: </label>
+      <select id="numDice" style="padding:10px;font-size:1.2rem;">
+        <option value="3" selected>3</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+    <div style="text-align:center;">
+      <button onclick="rollDice()" style="font-size:1.5rem;padding:20px 40px;">ROLL THE DICE</button>
+      <button onclick="clearRoll()" style="background:#8b1e1e;color:#fff;">Clear</button>
+    </div>
+    <div id="diceDisplay" class="dice-container"></div>
+    <div id="summary" class="results-summary" style="display:none;">
+      <strong>Steady:</strong> <span id="steadyCount">0</span> 
+      <strong>Surge:</strong> <span id="surgeCount">0</span> 
+      <strong>Savage:</strong> <span id="savageCount">0</span>
+      <hr style="border-color:#d4c9a8;margin:15px 0;">
+      <strong>Suggested Conversions:</strong> <span id="conversions"></span>
+    </div>
+  </div>
+
+  <!-- DOWNLOADS (add your PDFs here later) -->
+  <div id="downloads" class="section" style="background:#13273f;">
+    <h2 style="text-align:center;">Downloads</h2>
+    <p style="text-align:center;">Rulebook, QRS, and playtest sheets coming soon!</p>
+  </div>
+
+  <script>
+    // List Builder
+    const crews = {
+      pirates: [{name:"Captain (Rust King)",cost:160},{name:"Basic (Scallywag)",cost:95},{name:"Basic (Cabin Boy)",cost:85},{name:"Elite (Bilge Rat)",cost:80}],
+      skylegions: [{name:"Captain (Yeager)",cost:190},{name:"Elite (Corbett)",cost:145},{name:"Basic (Rarámuri)",cost:95}]
+    };
+    function renderBuilder(faction) {
+      const container = document.getElementById('builder-content');
+      let html = `<h3>${faction === 'pirates' ? 'Pirates Swarm' : 'Sky Legions Elite'}</h3><table><tr><th>Model</th><th>Cost</th></tr>`;
+      crews[faction].forEach(m => html += `<tr><td>${m.name}</td><td>${m.cost} db</td></tr>`);
+      html += `</table><p style="text-align:center;margin-top:20px;">Total crew cost: ${faction === 'pirates' ? '420' : '430'} doubloons</p>`;
+      container.innerHTML = html;
+      document.getElementById('total-number').textContent = faction === 'pirates' ? '420' : '430';
+    }
+    document.getElementById('faction').addEventListener('change', e => renderBuilder(e.target.value));
+    renderBuilder('pirates');
+
+    // Dice Roller
+    function rollDice() {
+      const num = parseInt(document.getElementById('numDice').value);
+      const display = document.getElementById('diceDisplay');
+      const summary = document.getElementById('summary');
+      display.innerHTML = '';
+      let steady = 0, surge = 0, savage = 0;
+      for (let i = 0; i < num; i++) {
+        const roll = Math.floor(Math.random() * 6) + 1;
+        let tier = '', colorClass = '';
+        if (roll <= 3) { tier = 'STEADY'; colorClass = 'steady'; steady++; }
+        else if (roll <= 5) { tier = 'SURGE'; colorClass = 'surge'; surge++; }
+        else { tier = 'SAVAGE'; colorClass = 'savage'; savage++; }
+        const dieHTML = `<div class="die ${colorClass}">${roll}<div class="die-label">${tier}</div></div>`;
+        display.innerHTML += dieHTML;
+      }
+      let conv = '';
+      if (steady >= 2) conv += `${Math.floor(steady/2)} Steady → Surge `;
+      if (surge >= 2) conv += `${Math.floor(surge/2)} Surge → Savage `;
+      if (savage >= 2) conv += `${Math.floor(savage/2)} Savage → extra Steady`;
+      document.getElementById('steadyCount').textContent = steady;
+      document.getElementById('surgeCount').textContent = surge;
+      document.getElementById('savageCount').textContent = savage;
+      document.getElementById('conversions').innerHTML = conv || 'No pairs yet';
+      summary.style.display = 'block';
+    }
+    function clearRoll() {
+      document.getElementById('diceDisplay').innerHTML = '';
+      document.getElementById('summary').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
