@@ -12,19 +12,18 @@
     .nav { background: #1e3a5f; padding: 15px; text-align: center; position: sticky; top:0; z-index:100; }
     .nav a { color: #d4c9a8; margin: 0 15px; text-decoration: none; font-weight: bold; }
     .section { padding: 60px 20px; max-width: 1100px; margin: 0 auto; }
-    .list-builder, .dice-roller { background: #1e3a5f; border-radius: 12px; padding: 30px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .builder { background: #1e3a5f; border-radius: 12px; padding: 30px; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid #d4c9a8; }
-    button { background: #c9a66b; color: #0a1a2f; border: none; padding: 14px 28px; margin: 8px; cursor: pointer; font-weight: bold; font-size: 1.1rem; border-radius: 8px; }
-    .dice-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin: 30px 0; }
+    button { background: #c9a66b; color: #0a1a2f; border: none; padding: 10px 20px; margin: 5px; cursor: pointer; font-weight: bold; border-radius: 6px; }
+    .remove { background: #8b1e1e; color: white; padding: 6px 12px; font-size: 0.9rem; }
+    .total { font-size: 1.6rem; font-weight: bold; text-align: center; margin: 20px 0; color: #c9a66b; }
     .die { width: 90px; height: 90px; background: #112233; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.6); position: relative; }
-    .die.steady { background: #0a2a4a; color: #a8d4ff; }
-    .die.surge { background: #1e4a6b; color: #c9f0ff; }
+    .die.steady { background: #90EE90; color: #0a1a2f; }
+    .die.surge { background: #FFD700; color: #0a1a2f; }
     .die.savage { background: #8b1e1e; color: #ffd700; animation: glow 1.5s infinite alternate; }
     @keyframes glow { from { box-shadow: 0 0 10px #ffd700; } to { box-shadow: 0 0 30px #ffd700; } }
     .die-label { position: absolute; bottom: 6px; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; }
-    .total { font-size: 1.5rem; font-weight: bold; text-align: center; margin: 20px 0; }
-    .results-summary { background: #13273f; padding: 20px; border-radius: 8px; text-align: center; font-size: 1.3rem; }
   </style>
 </head>
 <body>
@@ -43,27 +42,51 @@
   </div>
 
   <!-- LIST BUILDER -->
-  <div id="builder" class="section list-builder">
-    <h2 style="text-align:center;">500-Doubloon List Builder</h2>
-    <select id="faction" style="padding:10px;font-size:1.1rem;margin-bottom:20px;">
-      <option value="pirates">Pirates (Swarm)</option>
-      <option value="skylegions">Sky Legions (Elite Vertical)</option>
-    </select>
-    <div id="builder-content"></div>
-    <div class="total">Total: <span id="total-number">0</span> / 500 doubloons</div>
+  <div id="builder" class="section builder">
+    <h2 style="text-align:center;">Darkwater List Builder</h2>
+    
+    <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center; margin-bottom:30px;">
+      <div>
+        <label>Budget: </label><br>
+        <input id="budget" type="number" value="500" style="padding:10px; width:120px; font-size:1.2rem;">
+      </div>
+      <div>
+        <label>Faction: </label><br>
+        <select id="faction" style="padding:10px; font-size:1.2rem;">
+          <option value="pirates">Pirates</option>
+          <option value="skylegions">Sky Legions</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="factionPassive" style="background:#13273f; padding:15px; border-radius:8px; margin-bottom:20px; font-style:italic; text-align:center;"></div>
+
+    <div style="margin-bottom:20px;">
+      <label>Add Model: </label>
+      <select id="modelSelect" style="padding:10px; width:280px;"></select>
+      <button onclick="addModel()">Add to Crew</button>
+    </div>
+
+    <table id="crewTable">
+      <thead><tr><th>Model</th><th>Abilities</th><th>Weapon + Keywords</th><th>Cost</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="total">
+      Spent: <span id="spent">0</span> | Remaining: <span id="remaining">500</span>
+    </div>
+
+    <button onclick="printList()" style="display:block; margin:20px auto; padding:15px 40px; font-size:1.3rem;">Generate Printable List</button>
   </div>
 
   <!-- DICE ROLLER -->
-  <div id="roller" class="section dice-roller">
+  <div id="roller" class="section builder">
     <h2 style="text-align:center;">Darkwater Dice Roller</h2>
     <p style="text-align:center;">Roll your custom Steady / Surge / Savage dice</p>
     <div style="text-align:center;margin:20px 0;">
       <label style="font-size:1.2rem;">Number of dice: </label>
       <select id="numDice" style="padding:10px;font-size:1.2rem;">
-        <option value="3" selected>3</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="4">4</option>
+        <option value="3" selected>3</option><option value="1">1</option><option value="2">2</option><option value="4">4</option>
       </select>
     </div>
     <div style="text-align:center;">
@@ -80,30 +103,158 @@
     </div>
   </div>
 
-  <!-- DOWNLOADS (add your PDFs here later) -->
-  <div id="downloads" class="section" style="background:#13273f;">
-    <h2 style="text-align:center;">Downloads</h2>
-    <p style="text-align:center;">Rulebook, QRS, and playtest sheets coming soon!</p>
-  </div>
-
   <script>
-    // List Builder
-    const crews = {
-      pirates: [{name:"Captain (Rust King)",cost:160},{name:"Basic (Scallywag)",cost:95},{name:"Basic (Cabin Boy)",cost:85},{name:"Elite (Bilge Rat)",cost:80}],
-      skylegions: [{name:"Captain (Yeager)",cost:190},{name:"Elite (Corbett)",cost:145},{name:"Basic (Rarámuri)",cost:95}]
+    // ====================== DATA ======================
+    const factions = {
+      pirates: {
+        name: "Pirates",
+        passive: "Boarding Action: Whenever an enemy is engaged by 2 or more pirate models, that enemy gains Suppressed.",
+        models: [
+          {id:1, name:"Captain (Rust King)", base:155, abilities:{savage:"FIRE! - 3 friendly pirates within 8\" take a free strike (no keywords/boosts)", surge:"Swab the Deck - 1 friendly pirate within 8\" takes a free strike", steady:"Get 'em, boys! - Enemy in engagement range of a pirate becomes Suppressed"}},
+          {id:2, name:"Basic (Scallywag)", base:90, abilities:{savage:"Avast ye dogs! - This model and allies in engagement range reroll 1 Impact die", surge:"Walk the Plank! - This model and 1 ally in engagement range reroll 1 Impact die", steady:"Ahoy! - Reroll 1 Impact die"}},
+          {id:3, name:"Basic (Cabin Boy)", base:75, abilities:{savage:"Rum! - All pirates in engagement range refresh 1 Grit", surge:"Patch me Up! - Remove one negative status on a pirate in engagement range", steady:"Go Boy! - If within engagement range of another pirate, Move 1\""}},
+          {id:4, name:"Elite (Bilge Rat)", base:75, abilities:{savage:"Rope Master - All climbing costs no movement", surge:"Mast Climber - Climb 6\" at no movement cost", steady:"Claw Climb - Climb 2\" at no movement cost"}},
+          {id:5, name:"Basic (Parrot-Goblin)", base:70, abilities:{savage:"Combat Screech - Move 6\" and pull attached enemy/ally (can cause fall)", surge:"Screeching Tangle - Attach to enemy until end of round", steady:"Shoulder Perch - Attach to ally until end of round"}}
+        ]
+      },
+      skylegions: {
+        name: "Sky Legions",
+        passive: "No faction passive defined yet.",
+        models: [
+          {id:1, name:"Captain (Yeager)", base:135, abilities:{savage:"The Current Calls - Any number of friendly Flyers move up 8\" to highest surface (ignores engagement)", surge:"Soar, Brother - Target Flyer moves 4\" upward", steady:"Wind be with you - Target Flyer moves 2\" upward"}},
+          {id:2, name:"Elite (Corbett)", base:120, abilities:{savage:"Thrill of the Hunt - All strikes against one enemy gain +1 Impact for the round", surge:"Falcons Eye - Strike against lower elevation gains +1 Impact", steady:"Hunters Cunning - Gain Focused before striking lower elevation"}},
+          {id:3, name:"Basic (Rarámuri)", base:70, abilities:{savage:"Catch the Current - Jump 6\" ignoring penalties", surge:"Climbing Talons - Jump 4\" ignoring penalties", steady:"Wing Armor - Jump 2\" ignoring penalties"}}
+        ]
+      }
     };
-    function renderBuilder(faction) {
-      const container = document.getElementById('builder-content');
-      let html = `<h3>${faction === 'pirates' ? 'Pirates Swarm' : 'Sky Legions Elite'}</h3><table><tr><th>Model</th><th>Cost</th></tr>`;
-      crews[faction].forEach(m => html += `<tr><td>${m.name}</td><td>${m.cost} db</td></tr>`);
-      html += `</table><p style="text-align:center;margin-top:20px;">Total crew cost: ${faction === 'pirates' ? '420' : '430'} doubloons</p>`;
-      container.innerHTML = html;
-      document.getElementById('total-number').textContent = faction === 'pirates' ? '420' : '430';
-    }
-    document.getElementById('faction').addEventListener('change', e => renderBuilder(e.target.value));
-    renderBuilder('pirates');
 
-    // Dice Roller
+    const weapons = [
+      {id:1, name:"Personal Armament", cost:5, keywords:"Augmentable (unlimited keywords possible)"},
+      {id:2, name:"Hook Knife", cost:10, keywords:"Lightweight: +1\" movement while climbing"},
+      {id:3, name:"Brine Bomb", cost:10, keywords:"Rotting Fumes: On Break, target is Slowed"},
+      {id:4, name:"Cutlass", cost:20, keywords:"Flanking: +1 Impact per ally in engagement range (stacks)"},
+      {id:5, name:"Lucky Club", cost:20, keywords:"Lucky: If you rolled a pair this activation, +1 Impact"},
+      {id:6, name:"Machete", cost:25, keywords:"Slip Through: Ignore engagement penalties when moving"},
+      {id:7, name:"Skyclaim Carbine", cost:25, keywords:"Drop-Ammo: On Break, apply 1\" Forced Movement"},
+      {id:8, name:"Perch Ordnance", cost:25, keywords:"Gyroscope: While climbing, gain 1 Impact reroll"},
+      {id:9, name:"Jump Spear", cost:55, keywords:"Ariel: 8\" range vs lower elevation | Exposed: Enemies get +1 Impact die with Savage Strike against you"},
+      {id:10, name:"Plunderbuss", cost:55, keywords:"Plunder: On Break, drop relic if carried | Thump: On Break, 2\" Forced Movement away"},
+      {id:11, name:"Cannon Appendage", cost:55, keywords:"Blast + Suppressive + Unstable + Unwieldy"}
+    ];
+
+    let crew = [];
+
+    // ====================== RENDER ======================
+    function renderModelSelect() {
+      const factionKey = document.getElementById('faction').value;
+      document.getElementById('factionPassive').innerHTML = `<strong>Faction Passive:</strong> ${factions[factionKey].passive}`;
+      const select = document.getElementById('modelSelect');
+      select.innerHTML = '<option value="">— Choose a model —</option>';
+      factions[factionKey].models.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.id;
+        opt.textContent = `${m.name} (${m.base} db)`;
+        select.appendChild(opt);
+      });
+    }
+
+    function addModel() {
+      const factionKey = document.getElementById('faction').value;
+      const modelId = parseInt(document.getElementById('modelSelect').value);
+      if (!modelId) return;
+      const modelData = factions[factionKey].models.find(m => m.id === modelId);
+      const newEntry = {
+        id: Date.now(),
+        modelName: modelData.name,
+        baseCost: modelData.base,
+        abilities: modelData.abilities,
+        weaponName: "Personal Armament",
+        weaponCost: 5,
+        keywords: "Augmentable (unlimited keywords possible)"
+      };
+      crew.push(newEntry);
+      renderCrew();
+    }
+
+    function renderCrew() {
+      const tbody = document.querySelector('#crewTable tbody');
+      tbody.innerHTML = '';
+      let totalSpent = 0;
+
+      crew.forEach((entry, index) => {
+        const rowCost = entry.baseCost + entry.weaponCost;
+        totalSpent += rowCost;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${entry.modelName}</td>
+          <td style="font-size:0.9rem;line-height:1.3;">Savage: ${entry.abilities.savage}<br>Surge: ${entry.abilities.surge}<br>Steady: ${entry.abilities.steady}</td>
+          <td>${entry.weaponName}<br><span style="font-size:0.85rem;">${entry.keywords}</span></td>
+          <td>${rowCost} db</td>
+          <td><button class="remove" onclick="removeModel(${index})">Remove</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      const budget = parseInt(document.getElementById('budget').value) || 500;
+      document.getElementById('spent').textContent = totalSpent;
+      document.getElementById('remaining').textContent = Math.max(0, budget - totalSpent);
+      document.getElementById('remaining').style.color = (budget - totalSpent < 0) ? '#8b1e1e' : '#c9a66b';
+    }
+
+    function removeModel(index) {
+      crew.splice(index, 1);
+      renderCrew();
+    }
+
+    function printList() {
+      const factionKey = document.getElementById('faction').value;
+      const budget = parseInt(document.getElementById('budget').value) || 500;
+      let totalSpent = crew.reduce((sum, entry) => sum + entry.baseCost + entry.weaponCost, 0);
+
+      let printHTML = `
+        <h1 style="text-align:center;">Darkwater Crew List</h1>
+        <h2 style="text-align:center;">${factions[factionKey].name} – ${budget} doubloons</h2>
+        <p style="text-align:center;"><strong>Faction Passive:</strong> ${factions[factionKey].passive}</p>
+        <hr>
+      `;
+
+      crew.forEach(entry => {
+        const cost = entry.baseCost + entry.weaponCost;
+        printHTML += `
+          <div style="margin:20px 0; border:1px solid #000; padding:15px;">
+            <strong>${entry.modelName}</strong> (${cost} db)<br>
+            <em>Savage:</em> ${entry.abilities.savage}<br>
+            <em>Surge:</em> ${entry.abilities.surge}<br>
+            <em>Steady:</em> ${entry.abilities.steady}<br><br>
+            <strong>Weapon:</strong> ${entry.weaponName}<br>
+            <em>Keywords:</em> ${entry.keywords}
+          </div>
+        `;
+      });
+
+      printHTML += `<p style="text-align:center;"><strong>Total Spent:</strong> ${totalSpent} db | <strong>Remaining:</strong> ${budget - totalSpent} db</p>`;
+
+      const printWin = window.open('', '_blank');
+      printWin.document.write(`<style>body{font-family:serif;margin:40px;line-height:1.4;}</style>` + printHTML);
+      printWin.document.close();
+      printWin.focus();
+      printWin.print();
+    }
+
+    // Event listeners
+    document.getElementById('faction').addEventListener('change', () => {
+      crew = [];
+      renderModelSelect();
+      renderCrew();
+    });
+    document.getElementById('budget').addEventListener('input', renderCrew);
+
+    // Initial load
+    renderModelSelect();
+    renderCrew();
+
+    // Dice Roller (with new colors)
     function rollDice() {
       const num = parseInt(document.getElementById('numDice').value);
       const display = document.getElementById('diceDisplay');
