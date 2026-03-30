@@ -87,7 +87,10 @@
     <div style="text-align:center;margin:20px 0;">
       <label style="font-size:1.2rem;">Number of dice: </label>
       <select id="numDice" style="padding:10px;font-size:1.2rem;">
-        <option value="3" selected>3</option><option value="1">1</option><option value="2">2</option><option value="4">4</option>
+        <option value="1" selected>1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
       </select>
     </div>
     <div style="text-align:center;">
@@ -114,12 +117,6 @@
       </div>
       <button onclick="convertPair()" style="padding:12px 30px;">Convert Pair</button>
     </div>
-
-    <div id="summary" class="results-summary" style="display:none;">
-      <strong>Steady:</strong> <span id="steadyCount">0</span> 
-      <strong>Surge:</strong> <span id="surgeCount">0</span> 
-      <strong>Savage:</strong> <span id="savageCount">0</span>
-    </div>
   </div>
 
   <script>
@@ -141,15 +138,45 @@
       }
     };
 
-    // Weapons (same as previous – full stats/keywords from PDF)
-    const commonRanged = [ /* ... same as last version ... */ ];
-    const commonMelee = [ /* ... same as last version ... */ ];
-    const rustPirateRanged = [ /* ... same as last version ... */ ];
-    const rustPirateMelee = [ /* ... same as last version ... */ ];
+    // Weapons (from latest PDF)
+    const commonRanged = [
+      {name:"Buoy Launcher (30)", cost:30, full:"Range: 6” • Impact: 2 • Thump: On Break, apply Forced Movement of 2” directly away from the attacker"},
+      {name:"Brine Bomb (10)", cost:10, full:"Range: 6” • Impact: 1 • Rotting Fumes: On Break, the target is Slowed"},
+      {name:"Driftwood Boomerang (15)", cost:15, full:"Range: 8” • Impact: 1 • Return Policy: On Break, make a second strike with +1 Impact (Cannot be used in engagement)"},
+      {name:"Flare Revolver (10)", cost:10, full:"Range: 6” • Impact: 1 • Point Blank: This weapon does not suffer from negative penalties when the wielder is within engagement"},
+      {name:"Grappling Gun (15)", cost:15, full:"Range: 6” • Impact: 1 • Swing: The wielder of this weapon may use their Strike Action to target a point on the map within this weapon's range. This spot gains the swingable terrain keyword during this unit's Move Action this activation"},
+      {name:"Harpoon & Tether (30)", cost:30, full:"Range: 6” • Impact Dice 2 • Tethered: On Break, apply Forced Movement of 2” toward the attacking unit"},
+      {name:"High Powered Net Gun (20)", cost:20, full:"Range: 4” • Impact Dice 2 • Disarming: On Break, the target cannot be Suppressed"},
+      {name:"Rust Spitter (25)", cost:25, full:"Range: 10” • Impact 2 • Laceration: On Damage, apply Suppressed"},
+      {name:"Rust Sprayer (15)", cost:15, full:"Range: 4” • Impact: 1 • Climb Foam: Using a strike, you may target a point on the map within this weapon's range. A 4” flat radius is created on that point, which is now considered climbable for the rest of the game."},
+      {name:"Salvaged Rifle (25)", cost:25, full:"Range: 12” • Impact Dice 1 • Scope: If this unit did not use a Savage Movement Boost during this activation, this strike gains +1 Impact"},
+      {name:"Screecher (30)", cost:30, full:"Range: 8” • Impact: 2 • Distortion: If the target has 0 grit, this weapon gains +1 Impact."},
+      {name:"Shard Sling (20)", cost:20, full:"Range: 8” • Impact: 2 • Reality Warping: On Damage, you may adjust the value of one unspent action die by +1 or -1 tier this activation"}
+    ];
+
+    const commonMelee = [
+      {name:"Boarding Blades (25)", cost:25, full:"Range 1” (Melee) • Impact Dice 2 • Menacing: This weapon adds +1” to the unit’s Engagement Range"},
+      {name:"Buckler (25)", cost:25, full:"Range: 1” (Melee) • Impact: 2 • Brace: While engaged, this unit reduces incoming forced movement by 1”"},
+      {name:"Hook Knife (10)", cost:10, full:"Range: 1” (Melee) • Impact: 1 • Lightweight: When this unit is climbing, it gains +1” movement."},
+      {name:"Kinetic Staff (25)", cost:25, full:"Range: 1” (Melee) • Impact: 2 • Kinetic Spin: Once per round, when an enemy uses a strike action against you, reduce the attacker's Impact by -1."},
+      {name:"Lucky Club (25)", cost:25, full:"Range: 1” (Melee) • Impact: 2 • Lucky: If you rolled a pair this activation, this strike gains +1 Impact"},
+      {name:"Machete (35)", cost:35, full:"Range: 1” (Melee) • Impact: 2 • Slip Through: After making a strike with this weapon, ignore engagement penalties while carrying this weapon."},
+      {name:"Magnet Mace (35)", cost:35, full:"Range: 1” (Melee) • Impact 3 • Commit: The wielder cannot spend Grit to reroll an Impact dice when using this weapon."},
+      {name:"Personal Armament (5)", cost:5, full:"Range: 1” (Melee) or 4” (depending on choice) • Impact: 1 • Augmentable: This weapon has no limit to the number of keywords it may possess. The first keyword added to this weapon costs an additional 15 doubloons. When a Keyword is added to this weapon, the weapon must be renamed. • Weapon path: upon purchasing this weapon for a unit, choose whether it is a melee (1” range) or ranged weapon (4” range)"}
+    ];
+
+    const rustPirateRanged = [
+      {name:"Scrap Shotgun (45)", cost:45, full:"Range: 6” • Impact Dice: 3 • Commit: The wielder cannot spend Grit to reroll an Impact dice when using this weapon. • Thump: On Break, apply Forced Movement of 2” directly away from the attacker"},
+      {name:"Scrap Grenade (35)", cost:35, full:"Range: 8” • Impact Dice: 2 • Blast: On Strike, apply the Hit and Havoc results to all units (friend, enemy, or self) within 3” of the target. • Suppressive: On Break, apply Suppressed • Unstable: After resolving this Strike, the attacking unit gains Suppressed."},
+      {name:"Cannon Appendage (60)", cost:60, full:"Range: 8” • Impact Dice: 4 • Blast • Suppressive • Unstable • Unwieldy: While holding this weapon, all forced movement against this unit does an additional 1”"},
+      {name:"Plunderbuss (55)", cost:55, full:"Range: 8” • Impact: 3 • Plunder: On Break, if the target is carrying a relic, it immediately drops it. • Thump: On Break, apply Forced Movement of 2” directly away from the attacker"}
+    ];
+
+    const rustPirateMelee = [
+      {name:"Cutlass (20)", cost:20, full:"Range: 1” (Melee) • Impact: 1 • Flanking: While within engagement range of an enemy and an ally, this weapon gains +1 Impact. This stacks for every ally within engagement range."}
+    ];
 
     let crew = [];
-    let rolledDice = [];   // for drag-and-drop
-    let momentumDie = null;
 
     // ====================== LIST BUILDER ======================
     function renderModelSelect() {
@@ -268,7 +295,6 @@
     }
 
     function printList() {
-      // (same clean printable version as before)
       const budget = parseInt(document.getElementById('budget').value) || 500;
       let totalSpent = crew.reduce((sum, entry) => {
         const hCost = entry.health > 2 ? (entry.health - 2) * 40 : 0;
@@ -309,7 +335,6 @@
     }
 
     // ====================== DICE ROLLER ======================
-    let rolledDice = [];
     let momentumDie = null;
     let convSlot1 = null;
     let convSlot2 = null;
@@ -318,7 +343,6 @@
       const num = parseInt(document.getElementById('numDice').value);
       const display = document.getElementById('diceDisplay');
       display.innerHTML = '';
-      rolledDice = [];
 
       for (let i = 0; i < num; i++) {
         const roll = Math.floor(Math.random() * 6) + 1;
@@ -333,15 +357,12 @@
         die.draggable = true;
         die.dataset.value = roll;
         die.dataset.tier = tier;
-        die.addEventListener('dragstart', dragStart);
+        die.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', die.outerHTML);
+          e.dataTransfer.setData('tier', tier);
+        });
         display.appendChild(die);
-        rolledDice.push(die);
       }
-    }
-
-    function dragStart(e) {
-      e.dataTransfer.setData('text/plain', e.target.outerHTML);
-      e.dataTransfer.setData('tier', e.target.dataset.tier);
     }
 
     // Momentum slot
@@ -374,20 +395,14 @@
 
     function convertPair() {
       if (conv1.dataset.tier && conv2.dataset.tier && conv1.dataset.tier === conv2.dataset.tier) {
-        let newTier = '';
-        if (conv1.dataset.tier === 'STEADY') newTier = 'SURGE';
-        else if (conv1.dataset.tier === 'SURGE') newTier = 'SAVAGE';
-        else return;
-
+        let newTier = conv1.dataset.tier === 'STEADY' ? 'SURGE' : 'SAVAGE';
         const newDie = document.createElement('div');
         newDie.className = `die ${newTier.toLowerCase()}`;
         newDie.innerHTML = `★<div class="die-label">${newTier}</div>`;
         document.getElementById('diceDisplay').appendChild(newDie);
 
-        conv1.innerHTML = 'Drag die 1';
-        conv2.innerHTML = 'Drag die 2';
-        delete conv1.dataset.tier;
-        delete conv2.dataset.tier;
+        conv1.innerHTML = 'Drag die 1'; delete conv1.dataset.tier;
+        conv2.innerHTML = 'Drag die 2'; delete conv2.dataset.tier;
       }
     }
 
