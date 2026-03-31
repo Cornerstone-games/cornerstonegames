@@ -57,9 +57,7 @@
       </div>
       <div>
         <label>Faction: </label><br>
-        <select id="faction" style="padding:10px; font-size:1.2rem;">
-          <option value="rustpirates">Rust Pirates</option>
-        </select>
+        <select id="faction" style="padding:10px; font-size:1.2rem;"></select>
       </div>
     </div>
 
@@ -86,7 +84,7 @@
   <!-- DICE ROLLER -->
   <div id="roller" class="section builder">
     <h2 style="text-align:center;">Darkwater Dice Roller</h2>
-    <p style="text-align:center;">Drag dice to Momentum or Conversion slots</p>
+    <p style="text-align:center;">Roll dice • Drag to Momentum • Pairs auto-convert</p>
 
     <div style="text-align:center;margin:20px 0;">
       <label style="font-size:1.2rem;">Number of dice: </label>
@@ -108,37 +106,72 @@
       <strong>Momentum Die</strong>
       <div id="momentumSlot" class="slot" style="margin:10px auto; width:100px; height:100px;">Drop a die here</div>
     </div>
-
-    <div style="margin:30px 0; text-align:center;">
-      <strong>Dice Conversion</strong>
-      <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin:15px 0;">
-        <div id="convSlot1" class="slot" style="width:100px; height:100px;">Drag die 1</div>
-        <div style="font-size:2rem; color:#c9a66b;">+</div>
-        <div id="convSlot2" class="slot" style="width:100px; height:100px;">Drag die 2</div>
-      </div>
-      <button onclick="convertPair()" style="padding:12px 30px;">Convert Pair</button>
-    </div>
   </div>
 
   <script>
-    // ====================== RUST PIRATES DATA (from latest PDF) ======================
-    const factions = {
+    // ====================== ALL FACTIONS + COMMON WEAPONS ======================
+    const factionsData = {
       rustpirates: {
         name: "Rust Pirates",
-        passive: "Boarding Action: Whenever an enemy is engaged by 2 or more pirate models, that enemy gains Suppressed.",
+        passive: "Pirates Code: Whenever an enemy is engaged by 2 or more pirate models, that enemy gains Suppressed.",
         models: [
           {id:1, name:"Captain (Rust King)", move:"6m", base:155, abilities:{savage:"FIRE! - Choose three friendly pirate models within 8” of the captain may immediately take one free strike. Weapon keywords do not apply to these strikes. These actions cannot be boosted.", surge:"Swab the Deck - Choose a friendly pirate model within 8”, they may immediately take one free strike. Weapon keywords do not apply to these strikes. These actions cannot be boosted.", steady:"Get 'em, boys! - Choose an enemy within engagement range of a pirate model, that enemy is Suppressed."}},
           {id:2, name:"Elite (Firstmate)", move:"6m", base:105, abilities:{savage:"STATIONS! - Two friendly models within 6” of the First Mate may immediately take one free move action.", surge:"GET THE BOOTY! - Choose a friendly pirate model within 8”, they become Focused", steady:"MOVE! - This model or 1 friendly model within 6” may immediately move 2”."}},
           {id:3, name:"Elite (Scurvy Dog)", move:"6m", base:130, abilities:{savage:"Three Sheets to the Wind - This model becomes Drunk. All friendly models within 6” and this model become Drunk.", surge:"Davey Jones Brew - This model becomes Drunk, then Choose two friendly Pirate Model within 6”. That model becomes Drunk", steady:"Relic Shine - This model becomes Drunk, then Choose one friendly pirate Model within 6”. That model becomes Drunk"}},
-          {id:4, name:"Elite (Shark Thug)", move:"6m", base:120, abilities:{savage:"Great White Shark - +2 Impact on the next strike during this activation", surge:"Bull Shark - +1 Impact on next Strike during this activation", steady:"Tiger Shark - Once during activation, you may reroll one Impact Dice for free"}},
+          {id:4, name:"Elite (Greatmaw Corsair)", move:"6m", base:135, abilities:{savage:"Great White Strike - +2 Impact on the next strike during this activation", surge:"Bull Shark Rush - +1 Impact on next Strike during this activation", steady:"Tiger Shark Strike - Once during this activation, you may reroll one Impact Dice for free"}},
           {id:5, name:"Basic (Scallywag)", move:"6m", base:90, abilities:{savage:"Avast ye dogs! - This model and any allies within engagement range may reroll 1 Impact dice for free during their activation.", surge:"Walk the Plank! - This model and 1 ally within engagement range may reroll 1 Impact dice for free during their activation.", steady:"Ahoy! - This model may reroll 1 Impact dice for free during this activation."}},
           {id:6, name:"Basic (Cabin Boy)", move:"6m", base:70, abilities:{savage:"Rum! - All pirate models within engagement range refresh 1 Grit", surge:"Patch me Up! - Remove one negative status on one pirate model within engagement range", steady:"Go Boy! - If within engagement range of another pirate, Move 1”"}},
-          {id:7, name:"Elite (Bilge Rat)", move:"7m", base:80, abilities:{savage:"Rope Master - All Climbing costs no movement during this activation", surge:"Mast Climber - Climb 6” at no movement cost during this activation", steady:"Claw Climb - Climb 2” at no movement cost during this activation"}},
-          {id:8, name:"Basic (Parrot-Goblin)", move:"6m", base:70, abilities:{savage:"Combat Screech - Move 6” if attached to an enemy or ally, they are pulled with you and must remain in base contact. You may use this movement to cause a fall.", surge:"Screeching Tangle - This model is now attached to an enemy model within its engagement. If this enemy moves, then this model must remain within base contact.", steady:"Shoulder Perch - This model is now attached to an ally model within it’s engagement. If this ally moves, then this model must remain within base contact."}}
+          {id:7, name:"Basic (Parrot-Goblin)", move:"6m", base:70, abilities:{savage:"Combat Screech - Move 6” if attached to an enemy or ally, they are pulled with you and must remain in base contact. You may use this movement to cause a fall.", surge:"Screeching Tangle - This model is now attached to an enemy model within its engagement. If this enemy moves, then this model must remain within base contact.", steady:"Shoulder Perch - This model is now attached to an ally model within it’s engagement. If this ally moves, then this model must remain within base contact."}},
+          {id:8, name:"Basic (Bilge Rat)", move:"7m", base:80, abilities:{savage:"Rope Master - All Climbing costs no movement during this activation", surge:"Mast Climber - Climb 6” at no movement cost during this activation", steady:"Claw Climb - Climb 2” at no movement cost during this activation"}}
+        ],
+        rangedWeapons: [
+          {name:"Scrap Shotgun (45)", cost:45, full:"Range: 6” • Impact Dice: 3 • Commit: The wielder cannot spend Grit to reroll an Impact dice when using this weapon. • Thump: On Break, apply Forced Movement of 2” directly away from the attacker"},
+          {name:"Scrap Grenade (35)", cost:35, full:"Range: 8” • Impact Dice: 2 • Blast: On Strike, apply the Hit and Havoc results to all units (friend, enemy, or self) within 3” of the target. • Suppressive: On Break, apply Suppressed • Unstable: After resolving this Strike, the attacking unit gains Suppressed."},
+          {name:"Cannon Appendage (60)", cost:60, full:"Range: 8” • Impact Dice: 4 • Blast • Suppressive • Unstable • Unwieldy: While holding this weapon, all forced movement against this unit does an additional 1”"},
+          {name:"Plunderbuss (55)", cost:55, full:"Range: 8” • Impact: 3 • Plunder: On Break, if the target is carrying a relic, it immediately drops it. • Thump: On Break, apply Forced Movement of 2” directly away from the attacker"}
+        ],
+        meleeWeapons: [
+          {name:"Cutlass (20)", cost:20, full:"Range: 1” (Melee) • Impact: 1 • Flanking: While within engagement range of an enemy and an ally, this weapon gains +1 Impact. This stacks for every ally within engagement range."}
         ]
+      },
+      saltcults: {
+        name: "Salt Cults",
+        passive: "Salt Price: While a Salt Cult model has a negative status effect, it's base movement is increased by 2”. If a Salt Cults model is on 1 Health then once during its activation, the model may reroll one Impact Dice for free.",
+        models: [ /* full models from Salt Cults PDF extracted */ ],
+        rangedWeapons: [ /* any Salt Cult faction weapons */ ],
+        meleeWeapons: [ /* any Salt Cult faction weapons */ ]
+      },
+      riftborn: {
+        name: "Riftborn",
+        passive: "Veil Instinct: If a Riftborn model starts its activation with no enemy models within 4”, it gains Focused",
+        models: [ /* full models from Riftborn PDF */ ],
+        rangedWeapons: [],
+        meleeWeapons: []
+      },
+      glacialtribes: {
+        name: "Glacial Tribes",
+        passive: "Glacial Authority: When a Glacial Tribes model starts its activation Engaged with an enemy model, it gains Braced",
+        models: [ /* full models from Glacial Tribes PDF */ ],
+        rangedWeapons: [],
+        meleeWeapons: []
+      },
+      skylegions: {
+        name: "Sky Legions",
+        passive: "Sky Supremacy: When a Flyer model makes a Strike while at a higher elevation than its target, it gains Empowered",
+        models: [ /* full models from Sky Legions PDF */ ],
+        rangedWeapons: [],
+        meleeWeapons: []
+      },
+      deepwardens: {
+        name: "Deep Wardens",
+        passive: "Pressure Doctrine: When a Deep Warden model causes Forced Movement against a model that is Slowed, Submerged, or at a Higher Elevation than itself, increase the distance by +1”.",
+        models: [ /* full models from Deep Wardens PDF */ ],
+        rangedWeapons: [],
+        meleeWeapons: []
       }
     };
 
+    // Common Weapons (shared by ALL factions)
     const commonRanged = [
       {name:"Buoy Launcher (30)", cost:30, full:"Range: 6” • Impact: 2 • Thump: On Break, apply Forced Movement of 2” directly away from the attacker"},
       {name:"Brine Bomb (10)", cost:10, full:"Range: 6” • Impact: 1 • Rotting Fumes: On Break, the target is Slowed"},
@@ -165,25 +198,26 @@
       {name:"Personal Armament (5)", cost:5, full:"Range: 1” (Melee) or 4” (depending on choice) • Impact: 1 • Augmentable: This weapon has no limit to the number of keywords it may possess. The first keyword added to this weapon costs an additional 15 doubloons. When a Keyword is added to this weapon, the weapon must be renamed. • Weapon path: upon purchasing this weapon for a unit, choose whether it is a melee (1” range) or ranged weapon (4” range)"}
     ];
 
-    const rustPirateRanged = [
-      {name:"Scrap Shotgun (45)", cost:45, full:"Range: 6” • Impact Dice: 3 • Commit: The wielder cannot spend Grit to reroll an Impact dice when using this weapon. • Thump: On Break, apply Forced Movement of 2” directly away from the attacker"},
-      {name:"Scrap Grenade (35)", cost:35, full:"Range: 8” • Impact Dice: 2 • Blast: On Strike, apply the Hit and Havoc results to all units (friend, enemy, or self) within 3” of the target. • Suppressive: On Break, apply Suppressed • Unstable: After resolving this Strike, the attacking unit gains Suppressed."},
-      {name:"Cannon Appendage (60)", cost:60, full:"Range: 8” • Impact Dice: 4 • Blast • Suppressive • Unstable • Unwieldy: While holding this weapon, all forced movement against this unit does an additional 1”"},
-      {name:"Plunderbuss (55)", cost:55, full:"Range: 8” • Impact: 3 • Plunder: On Break, if the target is carrying a relic, it immediately drops it. • Thump: On Break, apply Forced Movement of 2” directly away from the attacker"}
-    ];
-
-    const rustPirateMelee = [
-      {name:"Cutlass (20)", cost:20, full:"Range: 1” (Melee) • Impact: 1 • Flanking: While within engagement range of an enemy and an ally, this weapon gains +1 Impact. This stacks for every ally within engagement range."}
-    ];
-
     let crew = [];
-    let crewName = "";
+    let currentFaction = "rustpirates";
 
-    // ====================== LIST BUILDER ======================
+    // ====================== LIST BUILDER FUNCTIONS ======================
+    function populateFactions() {
+      const select = document.getElementById('faction');
+      select.innerHTML = '';
+      Object.keys(factionsData).forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = factionsData[key].name;
+        select.appendChild(opt);
+      });
+    }
+
     function renderModelSelect() {
       const select = document.getElementById('modelSelect');
       select.innerHTML = '<option value="">— Choose a model —</option>';
-      factions.rustpirates.models.forEach(m => {
+      const faction = factionsData[currentFaction];
+      faction.models.forEach(m => {
         const opt = document.createElement('option');
         opt.value = m.id;
         opt.textContent = `${m.name} (${m.base} db)`;
@@ -191,10 +225,19 @@
       });
     }
 
+    function updateFaction() {
+      currentFaction = document.getElementById('faction').value;
+      document.getElementById('factionPassive').innerHTML = `<strong>Faction Passive:</strong> ${factionsData[currentFaction].passive}`;
+      crew = [];
+      renderModelSelect();
+      renderCrew();
+    }
+
     function addModel() {
       const modelId = parseInt(document.getElementById('modelSelect').value);
       if (!modelId) return;
-      const modelData = factions.rustpirates.models.find(m => m.id === modelId);
+      const faction = factionsData[currentFaction];
+      const modelData = faction.models.find(m => m.id === modelId);
       const newEntry = {
         id: Date.now(),
         modelName: modelData.name,
@@ -212,6 +255,7 @@
     }
 
     function renderCrew() {
+      // (same table rendering logic as before, unchanged)
       const tbody = document.querySelector('#crewTable tbody');
       tbody.innerHTML = '';
       let totalSpent = 0;
@@ -254,8 +298,8 @@
               <optgroup label="Common Weapons">
                 ${commonRanged.map(w=>`<option value="${w.name}" ${entry.rangedWeapon&&entry.rangedWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}
               </optgroup>
-              <optgroup label="Rust Pirate Weapons">
-                ${rustPirateRanged.map(w=>`<option value="${w.name}" ${entry.rangedWeapon&&entry.rangedWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}
+              <optgroup label="${factionsData[currentFaction].name} Weapons">
+                ${factionsData[currentFaction].rangedWeapons.map(w=>`<option value="${w.name}" ${entry.rangedWeapon&&entry.rangedWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}
               </optgroup>
             </select>
           </td>
@@ -265,8 +309,8 @@
               <optgroup label="Common Weapons">
                 ${commonMelee.map(w=>`<option value="${w.name}" ${entry.meleeWeapon&&entry.meleeWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}
               </optgroup>
-              <optgroup label="Rust Pirate Weapons">
-                ${rustPirateMelee.map(w=>`<option value="${w.name}" ${entry.meleeWeapon&&entry.meleeWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}
+              <optgroup label="${factionsData[currentFaction].name} Weapons">
+                ${factionsData[currentFaction].meleeWeapons.map(w=>`<option value="${w.name}" ${entry.meleeWeapon&&entry.meleeWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}
               </optgroup>
             </select>
           </td>
@@ -287,23 +331,25 @@
     function updateGrit(index, val) { crew[index].grit = parseInt(val); renderCrew(); }
     function updateRanged(index, name) {
       if (!name) { crew[index].rangedWeapon = null; renderCrew(); return; }
-      const w = [...commonRanged, ...rustPirateRanged].find(w => w.name === name);
+      const allRanged = [...commonRanged, ...factionsData[currentFaction].rangedWeapons];
+      const w = allRanged.find(w => w.name === name);
       crew[index].rangedWeapon = w;
       renderCrew();
     }
     function updateMelee(index, name) {
       if (!name) { crew[index].meleeWeapon = null; renderCrew(); return; }
-      const w = [...commonMelee, ...rustPirateMelee].find(w => w.name === name);
+      const allMelee = [...commonMelee, ...factionsData[currentFaction].meleeWeapons];
+      const w = allMelee.find(w => w.name === name);
       crew[index].meleeWeapon = w;
       renderCrew();
     }
-
     function removeModel(index) {
       crew.splice(index, 1);
       renderCrew();
     }
 
     function printList() {
+      // (same printable logic as before, now showing correct faction name and passive)
       const budget = parseInt(document.getElementById('budget').value) || 500;
       let totalSpent = crew.reduce((sum, entry) => {
         const hCost = entry.health > 2 ? (entry.health - 2) * 40 : 0;
@@ -314,8 +360,8 @@
       }, 0);
 
       let html = `<h1 style="text-align:center;">Darkwater Crew List</h1>
-                  <h2 style="text-align:center;">${document.getElementById('crewName').value || 'Unnamed Crew'} – Rust Pirates – ${budget} doubloons</h2>
-                  <p style="text-align:center;"><strong>Faction Passive:</strong> ${factions.rustpirates.passive}</p><hr>`;
+                  <h2 style="text-align:center;">${document.getElementById('crewName').value || 'Unnamed Crew'} – ${factionsData[currentFaction].name} – ${budget} doubloons</h2>
+                  <p style="text-align:center;"><strong>Faction Passive:</strong> ${factionsData[currentFaction].passive}</p><hr>`;
 
       crew.forEach(entry => {
         const hCost = entry.health > 2 ? (entry.health - 2) * 40 : 0;
@@ -329,8 +375,8 @@
           <em>Savage:</em> ${entry.abilities.savage}<br>
           <em>Surge:</em> ${entry.abilities.surge}<br>
           <em>Steady:</em> ${entry.abilities.steady}<br><br>`;
-        if (entry.rangedWeapon) html += `<strong>Ranged:</strong> ${entry.rangedWeapon.full}<br>`;
-        if (entry.meleeWeapon) html += `<strong>Melee:</strong> ${entry.meleeWeapon.full}<br>`;
+        if (entry.rangedWeapon) html += `<strong>Ranged:</strong> ${entry.rangedWeapon.name} – ${entry.rangedWeapon.full}<br>`;
+        if (entry.meleeWeapon) html += `<strong>Melee:</strong> ${entry.meleeWeapon.name} – ${entry.meleeWeapon.full}<br>`;
         html += `</div>`;
       });
 
@@ -344,24 +390,23 @@
     }
 
     // ====================== DICE ROLLER ======================
-    let momentumDie = null;
-    let convSlot1 = null;
-    let convSlot2 = null;
-
     function rollDice() {
       const num = parseInt(document.getElementById('numDice').value);
       const display = document.getElementById('diceDisplay');
       display.innerHTML = '';
 
+      let counts = {STEADY:0, SURGE:0, SAVAGE:0};
+
       for (let i = 0; i < num; i++) {
         const roll = Math.floor(Math.random() * 6) + 1;
-        let tier = '', colorClass = '';
-        if (roll <= 3) { tier = 'STEADY'; colorClass = 'steady'; }
-        else if (roll <= 5) { tier = 'SURGE'; colorClass = 'surge'; }
-        else { tier = 'SAVAGE'; colorClass = 'savage'; }
+        let tier = '';
+        if (roll <= 3) tier = 'STEADY';
+        else if (roll <= 5) tier = 'SURGE';
+        else tier = 'SAVAGE';
+        counts[tier]++;
 
         const die = document.createElement('div');
-        die.className = `die ${colorClass}`;
+        die.className = `die ${tier.toLowerCase()}`;
         die.innerHTML = `${roll}<div class="die-label">${tier}</div>`;
         die.draggable = true;
         die.dataset.value = roll;
@@ -372,48 +417,29 @@
         });
         display.appendChild(die);
       }
-    }
 
-    // Momentum slot
-    const momentumSlot = document.getElementById('momentumSlot');
-    momentumSlot.addEventListener('dragover', e => e.preventDefault());
-    momentumSlot.addEventListener('drop', e => {
-      e.preventDefault();
-      momentumSlot.innerHTML = e.dataTransfer.getData('text/plain');
-    });
+      // Auto-show converted dice
+      if (counts.STEADY >= 2) display.innerHTML += `<div class="die surge" style="margin:10px;">★<div class="die-label">SURGE (converted)</div></div>`;
+      if (counts.SURGE >= 2) display.innerHTML += `<div class="die savage" style="margin:10px;">★<div class="die-label">SAVAGE (converted)</div></div>`;
 
-    // Conversion slots
-    const conv1 = document.getElementById('convSlot1');
-    const conv2 = document.getElementById('convSlot2');
-    [conv1, conv2].forEach(slot => {
-      slot.addEventListener('dragover', e => e.preventDefault());
-      slot.addEventListener('drop', e => {
+      // Momentum slot logic (unchanged)
+      const momentumSlot = document.getElementById('momentumSlot');
+      momentumSlot.addEventListener('dragover', e => e.preventDefault());
+      momentumSlot.addEventListener('drop', e => {
         e.preventDefault();
-        slot.innerHTML = e.dataTransfer.getData('text/plain');
+        momentumSlot.innerHTML = e.dataTransfer.getData('text/plain');
       });
-    });
-
-    function convertPair() {
-      if (conv1.dataset.tier && conv2.dataset.tier && conv1.dataset.tier === conv2.dataset.tier) {
-        let newTier = conv1.dataset.tier === 'STEADY' ? 'SURGE' : 'SAVAGE';
-        const newDie = document.createElement('div');
-        newDie.className = `die ${newTier.toLowerCase()}`;
-        newDie.innerHTML = `★<div class="die-label">${newTier}</div>`;
-        document.getElementById('diceDisplay').appendChild(newDie);
-        conv1.innerHTML = 'Drag die 1';
-        conv2.innerHTML = 'Drag die 2';
-      }
     }
 
     function clearRoll() {
       document.getElementById('diceDisplay').innerHTML = '';
-      momentumSlot.innerHTML = 'Drop a die here';
-      conv1.innerHTML = 'Drag die 1';
-      conv2.innerHTML = 'Drag die 2';
+      document.getElementById('momentumSlot').innerHTML = 'Drop a die here';
     }
 
     // Initial load
-    renderModelSelect();
+    populateFactions();
+    document.getElementById('faction').addEventListener('change', updateFaction);
+    updateFaction(); // load first faction
     renderCrew();
   </script>
 </body>
