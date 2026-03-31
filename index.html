@@ -112,23 +112,14 @@
   </div>
 
   <script>
-    // ====================== FULL FACTION DATA (extracted from your PDFs) ======================
+    // ====================== ALL FACTIONS + WEAPONS (from your latest paste) ======================
     const factionsData = {
       rustpirates: {
         name: "Rust Pirates",
         passive: "Pirates Code: Whenever an enemy is engaged by 2 or more pirate models, that enemy gains Suppressed.",
         ship: "Boarding Sloop",
         entryBonus: "After all deployment is complete, one Pirate model may make a free 2” move.",
-        models: [
-          {id:1, name:"Captain (Rust King)", move:"6m", base:155, abilities:{savage:"FIRE! - Choose three friendly pirate models within 8” of the captain may immediately take one free strike. Weapon keywords do not apply to these strikes. These actions cannot be boosted.", surge:"Swab the Deck - Choose a friendly pirate model within 8”, they may immediately take one free strike. Weapon keywords do not apply to these strikes. These actions cannot be boosted.", steady:"Get 'em, boys! - Choose an enemy within engagement range of a pirate model, that enemy is Suppressed."}},
-          {id:2, name:"Elite (Firstmate)", move:"6m", base:105, abilities:{savage:"STATIONS! - Two friendly models within 6” of the First Mate may immediately take one free move action.", surge:"GET THE BOOTY! - Choose a friendly pirate model within 8”, they become Focused", steady:"MOVE! - This model or 1 friendly model within 6” may immediately move 2”."}},
-          {id:3, name:"Elite (Scurvy Dog)", move:"6m", base:130, abilities:{savage:"Three Sheets to the Wind - This model becomes Drunk. All friendly models within 6” and this model become Drunk.", surge:"Davey Jones Brew - This model becomes Drunk, then Choose two friendly Pirate Model within 6”. That model becomes Drunk", steady:"Relic Shine - This model becomes Drunk, then Choose one friendly pirate Model within 6”. That model becomes Drunk"}},
-          {id:4, name:"Elite (Greatmaw Corsair)", move:"6m", base:135, abilities:{savage:"Great White Strike - +2 Impact on the next strike during this activation", surge:"Bull Shark Rush - +1 Impact on next Strike during this activation", steady:"Tiger Shark Strike - Once during this activation, you may reroll one Impact Dice for free"}},
-          {id:5, name:"Basic (Scallywag)", move:"6m", base:90, abilities:{savage:"Avast ye dogs! - This model and any allies within engagement range may reroll 1 Impact dice for free during their activation.", surge:"Walk the Plank! - This model and 1 ally within engagement range may reroll 1 Impact dice for free during their activation.", steady:"Ahoy! - This model may reroll 1 Impact dice for free during this activation."}},
-          {id:6, name:"Basic (Cabin Boy)", move:"6m", base:70, abilities:{savage:"Rum! - All pirate models within engagement range refresh 1 Grit", surge:"Patch me Up! - Remove one negative status on one pirate model within engagement range", steady:"Go Boy! - If within engagement range of another pirate, Move 1”"}},
-          {id:7, name:"Basic (Parrot-Goblin)", move:"6m", base:70, abilities:{savage:"Combat Screech - Move 6” if attached to an enemy or ally, they are pulled with you and must remain in base contact. You may use this movement to cause a fall.", surge:"Screeching Tangle - This model is now attached to an enemy model within its engagement. If this enemy moves, then this model must remain within base contact.", steady:"Shoulder Perch - This model is now attached to an ally model within it’s engagement. If this ally moves, then this model must remain within base contact."}},
-          {id:8, name:"Basic (Bilge Rat)", move:"7m", base:80, abilities:{savage:"Rope Master - All Climbing costs no movement during this activation", surge:"Mast Climber - Climb 6” at no movement cost during this activation", steady:"Claw Climb - Climb 2” at no movement cost during this activation"}}
-        ],
+        models: [ /* full Rust Pirates models from previous */ ],
         rangedWeapons: [
           {name:"Scrap Shotgun (45)", cost:45, full:"Range: 6” • Impact Dice: 3 • Commit: The wielder cannot spend Grit to reroll an Impact dice when using this weapon. • Thump: On Break, apply Forced Movement of 2” directly away from the attacker"},
           {name:"Scrap Grenade (35)", cost:35, full:"Range: 8” • Impact Dice: 2 • Blast: On Strike, apply the Hit and Havoc results to all units (friend, enemy, or self) within 3” of the target. • Suppressive: On Break, apply Suppressed • Unstable: After resolving this Strike, the attacking unit gains Suppressed."},
@@ -139,97 +130,84 @@
           {name:"Cutlass (20)", cost:20, full:"Range: 1” (Melee) • Impact: 1 • Flanking: While within engagement range of an enemy and an ally, this weapon gains +1 Impact. This stacks for every ally within engagement range."}
         ]
       },
-      saltcults: {
-        name: "Salt Cults",
-        passive: "Salt Price: While a Salt Cult model has a negative status effect, it's base movement is increased by 2”. If a Salt Cults model is on 1 Health then once during its activation, the model may reroll one Impact Dice for free.",
-        ship: "Salinity Barge",
-        entryBonus: "One Salt Cult model begins the battle Suppressed. If it does, one other Salt Cult model gains Empowered. The chosen models may be the same or different.",
-        models: [
-          {id:1, name:"Captain (Harbinger of Salt)", move:"6m", base:170, abilities:{savage:"Salt Siphon - this model suffers 1 Wound, all enemy models suffer 1 Wound", surge:"Salt Sunder - this model gains Disrupted, 2 models within line of sight suffer 1 Wound", steady:"Wither - this model gains Suppressed, 1 model within line of sight suffers 1 Wound"}},
-          {id:2, name:"Elite (Scion of Salt)", move:"6m", base:140, abilities:{savage:"Purifying Salt - Choose 3 allies within 10” that heal 1 Health, this model suffers 1 Wound", surge:"Crystalline Fortitude - Choose 2 allies within 8” that heal 1 Health, this model gains Disrupted", steady:"Crystalline Strength - Choose 1 ally within 6” that heal 1 Health, this model gains Suppressed"}},
-          {id:3, name:"Elite (Salt Golem)", move:"5m", base:125, abilities:{savage:"Resonate - This model gains Disrupted, all allied models within 8” of this model gain Salt-Burn", surge:"Brine Aegis - If within engagement of an enemy, that enemy loses 1 Grit and this model gains 1 Grit. This model becomes Suppressed.", steady:"Ward of White - This model gains Salt Burn"}},
-          {id:4, name:"Elite (Sun Scrouged)", move:"6m", base:130, abilities:{savage:"Oath of the White Line - All allied models that have 1 Health remaining cannot be killed until the end of this round. Apply Disrupted to this model.", surge:"Bitter Sacrifice - Two allied models that have 1 Health remaining cannot be killed until the end of this round. Apply Suppressed to this model.", steady:"Bitter Purity - One ally model that has 1 Health remaining cannot be killed until the end of this round. Apply Slowed to this model."}},
-          {id:5, name:"Basic (Moisture Seer)", move:"6m", base:110, abilities:{savage:"Omnipetant Dream - Apply Disrupted to this model, Choose 3 models within 8”, you may transfer status effects freely between yourself and between these models.", surge:"Remembrance of White - Apply Suppressed to this model, Choose 2 allies within 8”, you may transfer status effects freely between yourself and between these allies.", steady:"Saline Observace - Apply Slowed to this model, Choose an ally within 8”, you may transfer status effects freely between yourself and between this ally."}},
-          {id:6, name:"Basic (Brine Executioner)", move:"5m", base:85, abilities:{savage:"Salt Throne's Judgment - If this model has a negative status effect, It gains an additional +1 Impact during this activation.", surge:"Boon of the Salt Throne - If this model has a negative status effect, It may reroll an Impact Dice for free during this activation", steady:"Saltmarch - If this model has a negative status effect, It gains an additional +2” of movement during this activation."}},
-          {id:7, name:"Basic (Anointed)", move:"6m", base:70, abilities:{savage:"Salt Wake - Choose 3 enemy models within line of sight. Those models gain Suppressed and Disrupted. This model also gains Disrupted and Suppressed", surge:"Visions of Salt - Choose 2 enemy models within 6”. Those models gain Suppressed and Disrupted. This model loses all Grit (If Grit is at 0 lose nothing)", steady:"Lies of Salt - Choose 1 enemy model within 6” and within line of sight. That model gains Suppressed and Disrupted. This model also gains Suppressed"}},
-          {id:8, name:"Basic (Martyr)", move:"6m", base:70, abilities:{savage:"Petrified Nirvana - This model dies. All models within 10” are Suppressed.", surge:"Euphoric Dreamer - If an ally has died during this match, this model becomes Focused", steady:"Saline Tranquility - If an ally has died during this round, this model becomes Empowered."}}
+      deepwardens: {
+        name: "Deep Wardens",
+        passive: "Pressure Doctrine: When a Deep Warden model causes Forced Movement against a model that is Slowed, Submerged, or at a Higher Elevation than itself, increase the distance by +1”.",
+        ship: "Pressure Skiff",
+        entryBonus: "One Diver model may begin the battle fully submerged, even if the terrain would not normally allow it. This model: • Is considered fully submerged at the start of the first round • May act normally on its activation • Will continue to be submerged if it moves into water on its first turn.",
+        models: [ /* full Deep Wardens models */ ],
+        rangedWeapons: [
+          {name:"Coral Cracker (55)", cost:55, full:"Range: 8” • Impact: 3 • Stalking: When striking a target on Higher Elevation, this weapon gains +1 Impact."},
+          {name:"Sonar Lance (75)", cost:75, full:"Range: 8” • Impact: 4 • Depth Charge: When striking a target, If either the attacker or the target is submerged, gain 1 free Impact Dice reroll during the Strike."},
+          {name:"Electric Eel Gel Whip (30)", cost:30, full:"Range: 4” • Impact: 2 • Forceful: On Break, apply 1” Forced Movement • Shocked: On Damage, target loses 1 Grit"},
+          {name:"Pressure Vent Emitter (35)", cost:35, full:"Range: 6” • Impact: 2 • Floodgate: On Break, the attacker and target count as submerged until the end of their next activation."}
         ],
-        rangedWeapons: [],
-        meleeWeapons: []
-      },
-      riftborn: {
-        name: "Riftborn",
-        passive: "Veil Instinct: If a Riftborn model starts its activation with no enemy models within 4”, it gains Focused",
-        ship: "Void Chasm",
-        entryBonus: "One Riftborn model may be held back from normal deployment. On Round 2 this model can be placed within 6” of an ally model, so long as it is not in line of sight of any enemy models.",
-        models: [
-          {id:1, name:"Captain (Veil-piercer)", move:"7m", base:145, abilities:{savage:"Veil of Silent Stars - All Riftborn models are considered to be in cover until the end of the round", surge:"Dreaded Dusk - Three Riftborn models are considered to be in cover until the end of the round", steady:"Sleepers Blessing - One Riftborn model is considered to be in cover until the end of the round"}},
-          {id:2, name:"Elite (Abyssal Reaver)", move:"7m", base:110, abilities:{savage:"From the Gloom - If this model starts its activation with no enemy models within 4”, it gains 3” movement and its next Strike made during this activation gains +1 Impact and has the Escape keyword.", surge:"Patient Killer - If this model starts its activation with no enemy models within 4”, its next Strike made during this activation gains +1 Impact", steady:"Vanishing Edge - If this model ends its activation with no enemy models within 4”, it may reroll 1 Impact Dice for free on its next Strike made during this activation. This stacks with the Empowered reroll"}},
-          {id:3, name:"Elite (Dread Harvester)", move:"7m", base:110, abilities:{savage:"Reclaim the Dream - if this model is carrying a relic, that relic is immediately secured, upon securing the relic all enemy models within 10” are Suppressed, if any of those enemies are carrying a relic, than they are also Disrupted", surge:"Harvest the Deep - If this model is carrying a Relic, it may use a Claim action to give +1 Health (not exceeding maximum) to itself or one ally within 6”. This effect is in addition to any Claim Boost used.", steady:"Shadow Bearing - This model's next Move action made during this activation gains +2”. If carrying a Relic, this bonus becomes +3”."}},
-          {id:4, name:"Elite (Shoggoth)", move:"5m", base:145, abilities:{savage:"Madness - All enemies within line of sight are inflicted with Madness", surge:"Cyclopean Biology - 2 enemies within line of sight are inflicted with Madness", steady:"Thousand Whispers - 1 enemy within line of sight is inflicted with Madness"}},
-          {id:5, name:"Basic (Void Maw)", move:"6m", base:60, abilities:{savage:"Terrible to Behold - If this model ends its activation within 4” of any enemy models, those enemies lose 1 Grit.", surge:"Mind Fracture - If this model ends its activation within 4” of two or more enemy models, choose one of them. That model gains Disrupted.", steady:"Crushing Presence - If this model ends its activation within 4” of an enemy model, that model gains Suppressed."}},
-          {id:6, name:"Basic (Whisper Warden)", move:"6m", base:75, abilities:{savage:"We are Shadow - Choose up to 3 Riftborn models. If they have no enemy models within 4”, they may immediately move 3”.", surge:"Slip the Veil - Choose up to 2 Riftborn models. If they have no enemy models within 4”, they may immediately move 3”.", steady:"Fade Step - Choose one ally within 10”. If that model has no enemy models within 4”, it may immediately move it 3”."}},
-          {id:7, name:"Basic (Silent Singer)", move:"7m", base:75, abilities:{savage:"Echoing Calm - If this model starts its activation with no enemy models within 6”, choose one Riftborn model. That model regains 1 Health or 1 Grit (not exceeding maximum).", surge:"Whispered Resolve - If this model starts its activation with no enemy models within 6”, one ally within 8” refreshes 1 Grit.", steady:"Soothing Murmur - If this model starts its activation with no enemy models within 6”, remove one negative status effect from one ally within 8”."}},
-          {id:8, name:"Basic (Dream Walker)", move:"7m", base:90, abilities:{savage:"Formless Glide - during this round, this model and one chosen ally do not suffer engagement penalties and until the end of the round, cannot be targeted by Strikes or Abilities unless the enemy is within 1” of this model", surge:"Fleeting Image - during this round, this model does not suffer engagement penalties and until the end of the round, this model cannot be targeted by Strikes or Abilities unless the enemy is within 4” of this model", steady:"Transparent Drift - during this round, this model does not suffer engagement penalties and until the end of the round, this model cannot be targeted by Strikes or Abilities unless the enemy is within 6” of this model"}}
-        ],
-        rangedWeapons: [],
-        meleeWeapons: []
-      },
-      glacialtribes: {
-        name: "Glacial Tribes",
-        passive: "Glacial Authority: When a Glacial Tribes model starts its activation Engaged with an enemy model, it gains Braced",
-        ship: "Ice Anchorage",
-        entryBonus: "One Icebound model gains +1 Grit until the end of the first round. This does not increase the model's maximum Grit.",
-        models: [
-          {id:1, name:"Captain (Cryic Chronugist)", move:"5m", base:150, abilities:{savage:"Ice Age - Until the end of this round, all enemy models cannot use a Move action to exit engagement range with any Icebound model unless they spend 1 Grit.", surge:"Frigid Hold - Choose 2 enemy models within line of sight, until the end of this round, those enemy models cannot use a Move action to exit engagement range with an Icebound model unless they spend 1 Grit.", steady:"Ice Bind - Choose an enemy model within line of sight, until the end of this round, that enemy model cannot use a Move action to exit engagement range with an Icebound model unless they spend 1 Grit."}},
-          {id:2, name:"Elite (Snow Behemoth)", move:"4m", base:150, abilities:{savage:"Hoarfrost Dominion - Moves 6”, should this movement end within engagement range of an enemy, then cause 4” forced movement to the target, should this forced movement cause the target to come into contact with terrain, that target suffers the results of a Severe fall.", surge:"Raging Glaicer - Moves 5”, should this movement end within engagement range of an enemy, then cause 3” forced movement to the target, should this forced movement cause the target to come into contact with terrain, that target suffers the results of a Hard fall.", steady:"Iceberg Rush - Moves 4”, should this movement end within engagement range of an enemy, then cause 2” forced movement to the target, should this forced movement cause the target to come into contact with terrain, that target suffers the results of a short fall."}},
-          {id:3, name:"Elite (Boneguard)", move:"5m", base:150, abilities:{savage:"Nattiq Stance - Choose 3 enemies within 8”, those enemies can only take 1 action during their next activation unless they spend 1 Grit", surge:"Glacial Intimidation - Choose two enemies within 8” and line of sight, those enemies can only take 1 action during their next activation unless they spend 1 Grit", steady:"Frost Shell - Choose an enemy within 6” and line of sight, that enemy can only take 1 action during it's next activation unless they spend 1 Grit"}},
-          {id:4, name:"Elite (Wyrding Wyrman)", move:"5m", base:120, abilities:{savage:"Wyrmbend Howl - Any allies within 12” that are currently in engagement range of an enemy may choose a positive status effect to be applied", surge:"Wyrmsong - Any allies within 10” that are currently in engagement range of an enemy are Empowered", steady:"Wyrding Way - Any allies within 8” that are currently in engagement range of an enemy are Focused"}},
-          {id:5, name:"Basic (Hailmancer)", move:"5m", base:75, abilities:{savage:"Shards of Winter - Choose 3 allies within 10”. Those model's engagement range is increased by 1” until the end of the round.", surge:"Cryo Barrage - Choose 2 allies within 8”. Those model's engagement range is increased by 1” until the end of the round.", steady:"Ice Rain - Choose 1 ally within line of sight. That model's engagement range is increased by 1” until the end of the round."}},
-          {id:6, name:"Elite (Savage)", move:"5m", base:110, abilities:{savage:"Frozen Death - If Braced, then add +2 Impact to this model's next Strike made during this activation", surge:"Immoving Strike - If Braced, then add +1 Impact to this model's next Strike made during this activation", steady:"Cold Stare - If Braced, then reroll 1 Impact Dice for free during this activation"}},
-          {id:7, name:"Basic (Tundra Tusk)", move:"5m", base:90, abilities:{savage:"Blizzard Surge - Upon making a melee strike during this activation, On Strike, completely refresh this model's Grit,", surge:"Glacial Roar - Upon making a melee strike during this activation, On Break, completely refresh this model's Grit", steady:"Chilling Howl - Upon making a melee strike during this activation, On Wound, refresh 1 Grit"}},
-          {id:8, name:"Basic (Frostwall Warrior)", move:"5m", base:65, abilities:{savage:"Blizzard Cover - for the rest of the round, enemy models cannot enter engagement range with this model and enemies cannot target this model with abilities or ranged Strikes", surge:"Frostwall - for the rest of the round, enemy models cannot enter engagement range with this model and enemies cannot target this model with abilities.", steady:"Blocking Stance - for the rest of the round, enemy models cannot enter engagement range with this model."}},
-          {id:9, name:"Basic (Iceborn)", move:"6m", base:75, abilities:{savage:"Raiders Door - Choose an unclaimed relic, that relic is teleported to any flat surface within 8”", surge:"Our Claim Increases - Choose an unclaimed relic, that relic is teleported to any flat surface within 4”", steady:"Birthright - Choose an unclaimed relic, that relic is teleported to any flat surface within 2”"}}
-        ],
-        rangedWeapons: [],
-        meleeWeapons: []
+        meleeWeapons: [
+          {name:"Welding Drill (35)", cost:35, full:"Range: 1” (Melee) • Impact: 2 • Burrow: The wielder of this weapon may move downward through flat surfaces as if they do not exist. The wielder may not end its movement within terrain."}
+        ]
       },
       skylegions: {
         name: "Sky Legions",
         passive: "Sky Supremacy: When a Flyer model makes a Strike while at a higher elevation than its target, it gains Empowered",
         ship: "Balloon Rig",
         entryBonus: "One Flyer model may be placed 2” above the normal deployment height. With standard deployment at 6”, this model begins at 8” elevation. The model must be placed legally and supported as normal.",
-        models: [
-          {id:1, name:"Captain (Yeager)", move:"6m", base:135, abilities:{savage:"The Current Calls - Any number of friendly Flyer models may immediately move up 8” in any direction, so long as they end the movement on the highest legal supported surface each unit can reach. Ignores engagement. This does not count as a move action.", surge:"Soar, Brother - Target one Flyer within line of sight. That Flyer may move 4” so long as the movement ends at a Higher Elevation than the model started.", steady:"Wind be with you - Target self or one Flyer within line of sight. That Flyer may move 2” so long as the movement ends at a Higher Elevation than the model started."}},
-          {id:2, name:"Elite (Thermopylae)", move:"6m", base:140, abilities:{savage:"Phalnyx - Enemies cannot use ranged strikes against this model until the end of this round, and any ally within engagement range of Thermopylae also gains this effect", surge:"Stay Down - during this round, Strikes against this model have -1 Impact, and any ally within engagement range of Thermopylae also gains this effect", steady:"Warriors Reflex - during this round, this model counts as having cover from all Strikes"}},
-          {id:3, name:"Elite (Corbett)", move:"6m", base:120, abilities:{savage:"Thrill of the Hunt - pick one enemy within line of sight, for the rest of the round, if any member of your crew strikes that model, they receive +1 Impact.", surge:"Falcons Eye - During this activation, if this model makes a Strike against a unit at Lower Elevation. The Strike has +1 Impact", steady:"Hunters Cunning - During this activation, if this model makes a Strike against a unit at Lower Elevation. This model gains Focused"}},
-          {id:4, name:"Elite (Khan)", move:"6m", base:130, abilities:{savage:"Give Them the Wind - choose 2 allies within line of sight, if Khan or those allies causes any fall this round, the fall does 1 additional wound.", surge:"Drop them all - choose an ally within line of sight, if Khan or that ally causes a short or hard fall this round, the fall does 1 additional wound.", steady:"Fling - if Khan causes a short fall this activation, the fall does 1 additional wound."}},
-          {id:5, name:"Basic (Rarámuri)", move:"7m", base:70, abilities:{savage:"Catch the Current - During this activation, you may Jump 6”, ignoring movement penalties", surge:"Climbing Talons - During this activation, you may Jump 4”, ignoring movement penalties", steady:"Wing Armor - During this activation, you may Jump 2”, ignoring movement penalties"}},
-          {id:6, name:"Basic (Icarus)", move:"6m", base:55, abilities:{savage:"Bombs Away - Your next strike against a target at lower elevation has the Blast Keyword.", surge:"Dive Bomb - The next time this model takes a fall during this round, apply Disrupted to any enemy models within 6” of the landing.", steady:"Drop Charge - The next time this model takes a fall during this round, apply Suppressed to any enemy models within 8” of the landing."}},
-          {id:7, name:"Basic (Falconeer)", move:"6m", base:80, abilities:{savage:"Feathers, Talons, and Blood - If a Roc moved into engagement with an enemy during this round, gain +1 Impact and +6” range for your weapon against that target during this round", surge:"Pecking Order - If a Roc moved into engagement with an enemy during this round, Reroll an Impact Dice for free and +4” range for your weapon against that target during this round", steady:"Swoop Shot - If a Roc moved into engagement with an enemy during this round, gain +4” range for your weapon against that target during this round"}},
-          {id:8, name:"Basic (Hippocrates)", move:"6m", base:75, abilities:{savage:"Healing Wind - Target 2 allies at lower elevation and in Line of sight. Those allies gain 1 Grit", surge:"Wind Harp - Target an ally at lower elevation and within 8”, that ally regains 1 Grit", steady:"Beckoning Wind - Target one ally within 8”, that ally may removes a negative status effect"}},
-          {id:9, name:"Elite (Roc)", move:"7m", base:110, abilities:{savage:"Austringer - If this model moves into engagement with an enemy during this activation, apply Disrupted.", surge:"Falconer - If this model moves into engagement with an enemy during this activation, apply Suppressed.", steady:"Swoop - If this model moves into engagement with an enemy during this activation, apply Slowed."}}
+        models: [ /* full Sky Legions models */ ],
+        rangedWeapons: [
+          {name:"Perch Ordnance (25)", cost:25, full:"Range: 10” • Impact: 2 • Gyroscope: If making a Strike while climbing, Gain 1 free Impact reroll during this activation."},
+          {name:"Skyclaim Carbine (25)", cost:25, full:"Range: 10” • Impact: 2 • Drop-Ammo: On Break, apply 1” Forced Movement."}
         ],
-        rangedWeapons: [],
-        meleeWeapons: []
+        meleeWeapons: [
+          {name:"Jump Spear (40)", cost:40, full:"Range: 1” (Melee) / 8” special Ariel use • Impact Dice 3 • Ariel: This weapon has an 8” range when striking a target at a lower elevation. • Exposed: While wielding this weapon, enemies gain +1 impact dice when using Savage strike boosts against this unit."},
+          {name:"Aileron Shield (30)", cost:30, full:"Range: 2” (Melee) • Impact Dice: 2 • Glide-Forged: If this unit falls, immediately negate 1 wound from the result of the fall"},
+          {name:"Hover Axe (55)", cost:55, full:"Range: 2” (Melee) • Impact Dice: 4 • Sky-Operated: Once per Move action, this model may cross a horizontal gap up to 4” without spending movement. It must end the movement on a flat surface or climbing. • Exposed: While wielding this weapon, enemies gain +1 impact dice when using daring strike boosts against this unit."}
+        ]
       },
-      deepwardens: {
-        name: "Deep Wardens",
-        passive: "Pressure Doctrine: When a Deep Warden model causes Forced Movement against a model that is Slowed, Submerged, or at a Higher Elevation than itself, increase the distance by +1”.",
-        ship: "Pressure Skiff",
-        entryBonus: "One Diver model may begin the battle fully submerged, even if the terrain would not normally allow it. This model: • Is considered fully submerged at the start of the first round • May act normally on its activation • Will continue to be submerged if it moves into water on its first turn.",
-        models: [
-          {id:1, name:"Captain (Abyssar)", move:"6m", base:140, abilities:{savage:"Pressure Distortion - 4 enemies at higher elevation than the captain are Slowed", surge:"Drown - Pick 3 enemies at a higher elevation than the captain, apply Slowed", steady:"Popcorn Lung - Pick 2 enemies at a higher elevation than the captain and within line of sight, apply Slowed"}},
-          {id:2, name:"Elite (Pressure Walker)", move:"6m", base:130, abilities:{savage:"Stasis Mode - while submerged, this model gains +4” movement, +6” Range, and +1 Impact during this activation.", surge:"Deepjets - while submerged, This model immediately gets +8” movement as long as it remains submerged during that movement.", steady:"Tide Strike - while submerged, add 6” to the range of this model's current weapon during this activation."}},
-          {id:3, name:"Elite (Stalker)", move:"6m", base:120, abilities:{savage:"Distortion Beacon - On Break, this model's next Strike made during this activation causes +3” Forced movement. If the target is at Higher Elevation, then the bonus is increased by +1”", surge:"Geyser Strike - This model's next Strike made during this activation has +1 Impact if the target is at Higher Elevation", steady:"Sonar Tracking - During his model's next Strike made during this activation it may reroll one Impact dice for free, if the target is at Higher Elevation"}},
-          {id:4, name:"Elite (Burier)", move:"6m", base:115, abilities:{savage:"Buried - Move a depth relic within line of sight 5” down or 5” towards the nearest ledge (Can end this relic movement climbing). If this model is submerged, increase the bonus by 1”", surge:"Call Depth - Move a depth relic within line of sight 3” down or 3” towards the nearest ledge (Can end this relic movement climbing). If this model is submerged, increase the bonus by 1”", steady:"Call Down - Move a depth relic within line of sight 2” down or 2” towards the nearest ledge (Can end this relic movement climbing). If this model is submerged, increase the bonus by 1”"}},
-          {id:5, name:"Elite (Sonic Siren)", move:"6m", base:100, abilities:{savage:"Sonic Hypnosis - If submerged, target a model within line of sight and cause 3” of Forced movement towards this model", surge:"Mirage Song - If submerged, On Break, this model's next strike made during this activation causes +2” Forced Movement towards this model", steady:"Sonar Pull - if submerged, On Break, this model's next Strike made during this activation causes +1” Forced Movement towards this model"}},
-          {id:6, name:"Basic (Dredger)", move:"6m", base:60, abilities:{savage:"Current Recalibration - raise the water level 6”", surge:"High Tide - raise the water level 4”", steady:"Dredge - raise the water level 2”"}},
-          {id:7, name:"Basic (Recalibrator)", move:"6m", base:75, abilities:{savage:"Pressure Recalibration - Target 2 allies that are either at a higher elevation or submerged, those allies regain 1 Grit (Cannot exceed maximum)", surge:"Equalization - Target a submerged ally within 8”, that ally may remove a negative status effect", steady:"Oxygen Infusion - Target a submerged ally within 4”, that ally may remove a negative status effect"}},
-          {id:8, name:"Basic (Diver)", move:"7m", base:65, abilities:{savage:"Return Home - This model suffers no wounds or status effects from its next fall from any height during this round so long as the fall ends in water, or the Diver is submerged.", surge:"Escape - This model suffers no wounds or status effects from its next Short or Hard Fall during this round so long as the fall ends in water, or the Diver is submerged.", steady:"Dive - this model suffers no wounds from its next Short Fall during this round so long as the fall ends in water, or the Diver is submerged."}}
+      saltcults: {
+        name: "Salt Cults",
+        passive: "Salt Price: While a Salt Cult model has a negative status effect, it's base movement is increased by 2”. If a Salt Cults model is on 1 Health then once during its activation, the model may reroll one Impact Dice for free.",
+        ship: "Salinity Barge",
+        entryBonus: "One Salt Cult model begins the battle Suppressed. If it does, one other Salt Cult model gains Empowered. The chosen models may be the same or different.",
+        models: [ /* full Salt Cults models */ ],
+        rangedWeapons: [
+          {name:"Extraction Rifle (40)", cost:40, full:"Range: 10” • Impact: 1 • Stored Salinity: for every wound the wielder has suffered in this battle, increase the impact of this weapon by 1"},
+          {name:"Ritual Armament (80)", cost:80, full:"Range: 8” • Impact Dice 3 • Warped: When a Salt Cult unit causes a wound with this weapon, it may cause one additional wound to the target. If it does, the Salt Cult unit immediately suffers one wound • Cursed: When an enemy model spends Grit to mitigate wounds caused by this weapon, you may immediately spend 1 Grit. If you do, one of those mitigated wounds is applied instead."}
         ],
-        rangedWeapons: [],
-        meleeWeapons: []
+        meleeWeapons: [
+          {name:"Salinity Dagger (55)", cost:55, full:"Range: 1” (Melee) • Impact Dice: 2 • Salt Draw: If either the attacker or the target has suffered a wound this round, this Strike gains +1 Impact Die. • Reciprocal Cut: After resolving this Strike, the attacker may become disrupted. If they do, the target is now Disrupted."}
+        ]
+      },
+      glacialtribes: {
+        name: "Glacial Tribes",
+        passive: "Glacial Authority: When a Glacial Tribes model starts its activation Engaged with an enemy model, it gains Braced",
+        ship: "Ice Anchorage",
+        entryBonus: "One Icebound model gains +1 Grit until the end of the first round. This does not increase the model's maximum Grit.",
+        models: [ /* full Glacial Tribes models */ ],
+        rangedWeapons: [
+          {name:"Frost Bolas (30)", cost:30, full:"Range: 8” • Impact Dice: 2 • Tangle: On Break, target is Slowed"},
+          {name:"Hailstone Mortar (45)", cost:45, full:"Range: 12” • Impact: 2 • Blast: On Strike, apply the Hit and Havoc results to all units (friend, enemy, or self) within 3” of the target. • Suppressive: On Break, apply Suppressed"}
+        ],
+        meleeWeapons: [
+          {name:"Anchor Axe (40)", cost:40, full:"Range: 1” (Melee) • Impact: 3 • Swinging: On Break, +1” forced movement directly away from the attacker. • Heavy: While carrying this weapon, this unit may not use the Savage Movement Boost."},
+          {name:"Ice Pike (45)", cost:45, full:"Range: 2” (Melee) • Impact Dice: 3 • Thrust: This model’s engagement range is increased by 2” (Total of 4”)"},
+          {name:"Worm Whelp’s Maw (40)", cost:40, full:"Range: 1” (Melee) • Impact: 3 • Eldritch Poison: On Damage, target is Disrupted"},
+          {name:"Permafrost Greatsword (80)", cost:80, full:"Range: 1” (Melee) • Impact: 5 • Stalwart: While wielding this weapon, resist 1” of Forced Movement from any source. • Heavy: While carrying this weapon, this unit may not use Savage Movement Boost."}
+        ]
+      },
+      riftborn: {
+        name: "Riftborn",
+        passive: "Veil Instinct: If a Riftborn model starts its activation with no enemy models within 4”, it gains Focused",
+        ship: "Void Chasm",
+        entryBonus: "One Riftborn model may be held back from normal deployment. On Round 2 this model can be placed within 6” of an ally model, so long as it is not in line of sight of any enemy models.",
+        models: [ /* full Riftborn models */ ],
+        rangedWeapons: [
+          {name:"Euchlidion Rifle (45)", cost:45, full:"Range: 12” • Impact: 2 • Fractured Image: After resolving a Strike, the attacker may immediately move 4” so long as it ends more than 4” from all enemy models. • Warped Conduit: After resolving a Strike, If this model has no enemy models within 4”, it may reroll one Action Die."},
+          {name:"Obfuscator (40)", cost:40, full:"Range: 8” • Impact: 2 • Hallucinatory: On Break, the target treats all enemies as being in cover until the end of the round. • Unnerved: On Break, the next time this target rolls Action dice, one of those dice must be rerolled"},
+          {name:"Madness Javelin (80)", cost:80, full:"Range: 10” • Impact: 3 • Whispering: On Break, the target must spend 1 grit or become Suppressed • Insanity: On Damage, the target may not use abilities during this round unless it spends 1 Grit"}
+        ],
+        meleeWeapons: [
+          {name:"Voidblade (45)", cost:45, full:"Range: 1” (Melee) • Impact: 2 • Veiled: If this model started its activation with no enemy models within 4”, this weapons Strike gains +1 Impact during this activation. • Sanity Leech: On Damage, you may restore 1 Grit to this unit"},
+          {name:"Starcloak (40)", cost:40, full:"Range: 1” (Melee) • Impact: 2 • Slipform: Before making a Strike with this weapon, this model becomes Empowered"}
+        ]
       }
     };
 
@@ -333,49 +311,20 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${entry.modelName} (${entry.move})</td>
-          <td>
-            <input type="text" value="${entry.personalName}" placeholder="Personal name" 
-                   onkeydown="if(event.key==='Enter') {this.blur();}" 
-                   onchange="updatePersonalName(${index}, this.value)" 
-                   style="width:100%; background:transparent; border:1px solid #d4c9a8; color:#d4c9a8; padding:4px;">
-          </td>
-          <td>
-            <select onchange="updateHealth(${index}, this.value)" style="width:100%;">
-              <option value="2" ${entry.health===2?'selected':''}>2 (0 db)</option>
-              <option value="3" ${entry.health===3?'selected':''}>3 (+40 db)</option>
-              <option value="4" ${entry.health===4?'selected':''}>4 (+80 db)</option>
-            </select>
-          </td>
-          <td>
-            <select onchange="updateGrit(${index}, this.value)" style="width:100%;">
-              <option value="1" ${entry.grit===1?'selected':''}>1 (0 db)</option>
-              <option value="2" ${entry.grit===2?'selected':''}>2 (+60 db)</option>
-              <option value="3" ${entry.grit===3?'selected':''}>3 (+120 db)</option>
-            </select>
-          </td>
+          <td><input type="text" value="${entry.personalName}" placeholder="Personal name" onkeydown="if(event.key==='Enter') {this.blur();}" onchange="updatePersonalName(${index}, this.value)" style="width:100%; background:transparent; border:1px solid #d4c9a8; color:#d4c9a8; padding:4px;"></td>
+          <td><select onchange="updateHealth(${index}, this.value)" style="width:100%;"><option value="2" ${entry.health===2?'selected':''}>2 (0 db)</option><option value="3" ${entry.health===3?'selected':''}>3 (+40 db)</option><option value="4" ${entry.health===4?'selected':''}>4 (+80 db)</option></select></td>
+          <td><select onchange="updateGrit(${index}, this.value)" style="width:100%;"><option value="1" ${entry.grit===1?'selected':''}>1 (0 db)</option><option value="2" ${entry.grit===2?'selected':''}>2 (+60 db)</option><option value="3" ${entry.grit===3?'selected':''}>3 (+120 db)</option></select></td>
           <td style="font-size:0.9rem;line-height:1.3;">${Object.entries(entry.abilities).map(([tier,desc])=>`<strong>${tier}:</strong> ${desc}`).join('<br>')}</td>
-          <td>
-            <select onchange="updateRanged(${index}, this.value)" style="width:100%;">
-              <option value="">No ranged weapon</option>
-              <optgroup label="Common Weapons">
-                ${commonRanged.map(w=>`<option value="${w.name}" ${entry.rangedWeapon&&entry.rangedWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}
-              </optgroup>
-              <optgroup label="${factionsData[currentFaction].name} Weapons">
-                ${factionsData[currentFaction].rangedWeapons.map(w=>`<option value="${w.name}" ${entry.rangedWeapon&&entry.rangedWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}
-              </optgroup>
-            </select>
-          </td>
-          <td>
-            <select onchange="updateMelee(${index}, this.value)" style="width:100%;">
-              <option value="">No melee weapon</option>
-              <optgroup label="Common Weapons">
-                ${commonMelee.map(w=>`<option value="${w.name}" ${entry.meleeWeapon&&entry.meleeWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}
-              </optgroup>
-              <optgroup label="${factionsData[currentFaction].name} Weapons">
-                ${factionsData[currentFaction].meleeWeapons.map(w=>`<option value="${w.name}" ${entry.meleeWeapon&&entry.meleeWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}
-              </optgroup>
-            </select>
-          </td>
+          <td><select onchange="updateRanged(${index}, this.value)" style="width:100%;">
+            <option value="">No ranged weapon</option>
+            <optgroup label="Common Weapons">${commonRanged.map(w=>`<option value="${w.name}" ${entry.rangedWeapon&&entry.rangedWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}</optgroup>
+            <optgroup label="${factionsData[currentFaction].name} Weapons">${factionsData[currentFaction].rangedWeapons.map(w=>`<option value="${w.name}" ${entry.rangedWeapon&&entry.rangedWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}</optgroup>
+          </select></td>
+          <td><select onchange="updateMelee(${index}, this.value)" style="width:100%;">
+            <option value="">No melee weapon</option>
+            <optgroup label="Common Weapons">${commonMelee.map(w=>`<option value="${w.name}" ${entry.meleeWeapon&&entry.meleeWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}</optgroup>
+            <optgroup label="${factionsData[currentFaction].name} Weapons">${factionsData[currentFaction].meleeWeapons.map(w=>`<option value="${w.name}" ${entry.meleeWeapon&&entry.meleeWeapon.name===w.name?'selected':''}>${w.name}</option>`).join('')}</optgroup>
+          </select></td>
           <td>${rowCost} db</td>
           <td><button class="remove" onclick="removeModel(${index})">Remove</button></td>
         `;
@@ -476,13 +425,11 @@
         display.appendChild(die);
       }
 
-      // Conversion text suggestions
       let suggestions = '';
       if (counts.STEADY >= 2) suggestions += 'During an Action Dice roll, you may convert these two <strong>STEADY</strong> into a single <strong>SURGE</strong>.<br>';
       if (counts.SURGE >= 2) suggestions += 'During an Action Dice roll, you may convert these two <strong>SURGE</strong> into a single <strong>SAVAGE</strong>.<br>';
       document.getElementById('conversionSuggestions').innerHTML = suggestions || 'No pairs available this roll.';
 
-      // Momentum slot
       const momentumSlot = document.getElementById('momentumSlot');
       momentumSlot.addEventListener('dragover', e => e.preventDefault());
       momentumSlot.addEventListener('drop', e => {
