@@ -5,122 +5,152 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cornerstone Games • Darkwater</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=UnifrakturCook:wght@700&display=swap');
-    
-    :root {
-      --light-green: #7CFF9E;
-      --dark-green: #0F2A1F;
-      --pale-green: #A8FFC2;
-      --neon-green: #39FF9E;
-    }
+  @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=UnifrakturCook:wght@700&display=swap');
+  
+  :root {
+    --light-green: #7CFF9E;
+    --dark-green: #0F2A1F;
+    --pale-green: #A8FFC2;
+    --neon-green: #39FF9E;
+  }
 
-    body { 
-      font-family: 'IM Fell English SC', serif; 
-      background: #000000; 
-      color: #ffffff; 
-      margin:0; 
-      padding:0; 
+  * { box-sizing: border-box; }
+
+  body { 
+    font-family: 'IM Fell English SC', serif; 
+    background: #000000; 
+    color: #ffffff; 
+    margin:0; 
+    padding:0; 
+  }
+  
+  .hero { 
+    background: linear-gradient(rgba(0,0,0,0.92), rgba(0,0,0,0.92)), 
+                url('https://via.placeholder.com/1920x1080/000000/0F2A1F?text=Darkwater+Diver') center/cover no-repeat; 
+    background-attachment: fixed; /* prevents sliding on mobile */
+    text-align:center; 
+    padding:120px 20px; 
+    min-height: 60vh;
+  }
+  
+  .nav { 
+    background: #0F2A1F; 
+    padding: 15px; 
+    text-align: center; 
+    position: sticky; 
+    top:0; 
+    z-index:100; 
+  }
+  
+  .nav a { 
+    color: #ffffff; 
+    margin: 0 15px; 
+    text-decoration: none; 
+    font-weight: bold; 
+  }
+  
+  .nav a:hover {
+    color: var(--light-green);
+    text-shadow: 0 0 10px var(--light-green);
+  }
+  
+  .section { 
+    padding: 60px 20px; 
+    max-width: 1100px; 
+    margin: 0 auto; 
+  }
+  
+  .builder { 
+    background: #0F2A1F; 
+    border-radius: 12px; 
+    padding: 30px; 
+    box-shadow: 0 0 30px rgba(124, 255, 158, 0.15);
+  }
+  
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--light-green); vertical-align: top; color: #ffffff; }
+  
+  button { 
+    background: var(--light-green); 
+    color: #000000; 
+    border: none; 
+    padding: 10px 20px; 
+    margin: 5px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    border-radius: 6px; 
+    transition: all 0.2s;
+  }
+  button:hover { background: #ffffff; transform: scale(1.05); box-shadow: 0 0 15px var(--neon-green); }
+  
+  .remove { background: #8b1e1e; color: white; padding: 6px 12px; font-size: 0.9rem; }
+  
+  .total { font-size: 1.6rem; font-weight: bold; text-align: center; margin: 20px 0; color: var(--light-green); }
+  
+  /* Original dice colors (Steady = blue, Surge = gold, Savage = red) */
+  .die { 
+    width: 90px; height: 90px; background: #112233; border-radius: 12px; 
+    display: flex; align-items: center; justify-content: center; font-size: 2.2rem; 
+    font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.6); position: relative; cursor: grab; color: #ffffff;
+  }
+  .die.steady { background: #58B6FF; color: #0a1a2f; }   /* ← your new blue Steady */
+  .die.surge { background: #FFD700; color: #0a1a2f; }
+  .die.savage { background: #8b1e1e; color: #ffd700; animation: glow 1.5s infinite alternate; }
+  @keyframes glow { from { box-shadow: 0 0 10px #ffd700; } to { box-shadow: 0 0 30px #ffd700; } }
+  .die-label { position: absolute; bottom: 6px; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; color: #000000; }
+  
+  .slot { 
+    width: 100px; height: 100px; border: 3px dashed var(--light-green); border-radius: 12px; 
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem; text-align: center; color: #ffffff;
+  }
+  
+  .conversion-text { 
+    background:#0F2A1F; padding:15px; border-radius:8px; margin:15px 0; font-style:italic; 
+    text-align:center; color: var(--light-green);
+  }
+  
+  .download-btn {
+    background: var(--light-green); color: #000000; padding: 20px 60px; font-size: 1.5rem;
+    font-weight: bold; border-radius: 8px; text-decoration: none; display: inline-block;
+    box-shadow: 0 10px 25px rgba(124, 255, 158, 0.4); transition: transform 0.2s;
+  }
+  .download-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--neon-green); }
+  
+  .logo-cornerstone, .logo-darkwater { max-width: 620px; width: 100%; height: auto; margin: 0 auto 20px; display: block; }
+  .logo-darkwater { max-width: 580px; margin-bottom: 30px; }
+  
+  .divider-symbol { text-align: center; margin: 80px 0; }
+  .divider-symbol img { max-width: 420px; width: 100%; height: auto; filter: drop-shadow(0 0 40px var(--light-green)); }
+  
+  .section-title { color: var(--light-green); text-align: center; font-size: 2.8rem; margin-bottom: 20px; }
+  
+  #diceDisplay { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin:30px 0; }
+
+  /* ==================== MOBILE RESPONSIVE FIXES ==================== */
+  @media (max-width: 768px) {
+    .hero { padding: 80px 15px; min-height: 50vh; background-attachment: scroll; }
+    .section { padding: 40px 15px; }
+    .builder { padding: 20px; }
+    .nav a { margin: 0 8px; font-size: 0.95rem; }
+    
+    /* Make the crew table scroll horizontally on phones */
+    #crewTable { display: block; overflow-x: auto; white-space: nowrap; }
+    
+    /* Make inputs and selects full-width and easier to tap */
+    input, select, button {
+      width: 100%;
+      max-width: none;
+      margin-bottom: 10px;
     }
     
-    .hero { 
-      background: linear-gradient(rgba(0,0,0,0.92), rgba(0,0,0,0.92)), 
-                  url('https://via.placeholder.com/1920x1080/000000/0F2A1F?text=Darkwater+Diver') center/cover no-repeat; 
-      text-align:center; 
-      padding:120px 20px; 
-    }
+    /* Dice roller stays nice on small screens */
+    .die { width: 75px; height: 75px; font-size: 1.8rem; }
+    #diceDisplay { gap: 10px; }
     
-    .nav { 
-      background: #0F2A1F; 
-      padding: 15px; 
-      text-align: center; 
-      position: sticky; 
-      top:0; 
-      z-index:100; 
-    }
-    
-    .nav a { 
-      color: #ffffff; 
-      margin: 0 15px; 
-      text-decoration: none; 
-      font-weight: bold; 
-    }
-    
-    .nav a:hover {
-      color: var(--light-green);
-      text-shadow: 0 0 10px var(--light-green);
-    }
-    
-    .section { 
-      padding: 60px 20px; 
-      max-width: 1100px; 
-      margin: 0 auto; 
-    }
-    
-    .builder { 
-      background: #0F2A1F; 
-      border-radius: 12px; 
-      padding: 30px; 
-      box-shadow: 0 0 30px rgba(124, 255, 158, 0.15);
-    }
-    
-    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--light-green); vertical-align: top; color: #ffffff; }
-    
-    button { 
-      background: var(--light-green); 
-      color: #000000; 
-      border: none; 
-      padding: 10px 20px; 
-      margin: 5px; 
-      cursor: pointer; 
-      font-weight: bold; 
-      border-radius: 6px; 
-      transition: all 0.2s;
-    }
-    button:hover { background: #ffffff; transform: scale(1.05); box-shadow: 0 0 15px var(--neon-green); }
-    
-    .remove { background: #8b1e1e; color: white; padding: 6px 12px; font-size: 0.9rem; }
-    
-    .total { font-size: 1.6rem; font-weight: bold; text-align: center; margin: 20px 0; color: var(--light-green); }
-    
-    .die { 
-      width: 90px; height: 90px; background: #112233; border-radius: 12px; 
-      display: flex; align-items: center; justify-content: center; font-size: 2.2rem; 
-      font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.6); position: relative; cursor: grab; color: #ffffff;
-    }
-    .die.steady { background: #58B6FF; color: #0a1a2f; }
-    .die.surge { background: #FFD700; color: #0a1a2f; }
-    .die.savage { background: #8b1e1e; color: #ffd700; animation: glow 1.5s infinite alternate; }
-    @keyframes glow { from { box-shadow: 0 0 10px #39FF9E; } to { box-shadow: 0 0 30px #39FF9E; } }
-    .die-label { position: absolute; bottom: 6px; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; color: #000000; }
-    
-    .slot { 
-      width: 100px; height: 100px; border: 3px dashed var(--light-green); border-radius: 12px; 
-      display: flex; align-items: center; justify-content: center; font-size: 1.1rem; text-align: center; color: #ffffff;
-    }
-    
-    .conversion-text { 
-      background:#0F2A1F; padding:15px; border-radius:8px; margin:15px 0; font-style:italic; 
-      text-align:center; color: var(--light-green);
-    }
-    
-    .download-btn {
-      background: var(--light-green); color: #000000; padding: 20px 60px; font-size: 1.5rem;
-      font-weight: bold; border-radius: 8px; text-decoration: none; display: inline-block;
-      box-shadow: 0 10px 25px rgba(124, 255, 158, 0.4); transition: transform 0.2s;
-    }
-    .download-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--neon-green); }
-    
-    .logo-cornerstone, .logo-darkwater { max-width: 620px; width: 100%; height: auto; margin: 0 auto 20px; display: block; }
-    .logo-darkwater { max-width: 580px; margin-bottom: 30px; }
-    
-    .divider-symbol { text-align: center; margin: 80px 0; }
-    .divider-symbol img { max-width: 420px; width: 100%; height: auto; filter: drop-shadow(0 0 40px var(--light-green)); }
-    
-    .section-title { color: var(--light-green); text-align: center; font-size: 2.8rem; margin-bottom: 20px; }
-    
-    #diceDisplay { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin:30px 0; }
-  </style>
+    .logo-cornerstone, .logo-darkwater { max-width: 90%; }
+    .divider-symbol img { max-width: 280px; }
+  }
+</style>
 </head>
 <body>
 
